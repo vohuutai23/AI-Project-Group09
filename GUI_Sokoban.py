@@ -6,6 +6,7 @@ Created on Sat Oct 21 17:48:38 2023
 """
 
 import tkinter as tk
+from tkinter import messagebox
 
 class SokobanGame(tk.Tk):
     def __init__(self):
@@ -13,7 +14,7 @@ class SokobanGame(tk.Tk):
         # Bản đồ mẫu
         self.GAME_MAP = [
             "#######",
-            "#00b00#",
+            "#00000#",
             "#00p00#",
             "#00000#",
             "#00b00#",
@@ -54,15 +55,14 @@ class SokobanGame(tk.Tk):
                     self.canvas.create_oval(x1, y1, x2, y2, fill="green")
                 elif cell == "x":
                     self.canvas.create_rectangle(x1, y1, x2, y2, fill="black")
-                    
-        print(self.GAME_MAP)
 
     def move_player(self, dx, dy):
         x, y = self.player_pos
         new_map = [list(row) for row in self.GAME_MAP]
-        print(new_map)
+        for row in self.GAME_MAP:
+            print(row)
+        print()
         cell = new_map[y][x]
-        print(cell)
         new_x, new_y = x + dx, y + dy
         new_cell = new_map[new_y][new_x]
         if new_cell == "#" :
@@ -100,6 +100,14 @@ class SokobanGame(tk.Tk):
                 
         self.GAME_MAP = ["".join(r) for r in new_map]
         self.draw_game_map()
+        if self.is_complete():
+            messagebox.showinfo("Congratulations", "You win !!")
+        
+    def is_complete(self):
+        for row in self.GAME_MAP:
+            if 'b' in row:
+                return False
+        return True
 
 def main():
     game = SokobanGame()
