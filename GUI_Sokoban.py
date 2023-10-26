@@ -13,13 +13,12 @@ class SokobanGame(tk.Tk):
         super().__init__()
         # Bản đồ mẫu
         self.GAME_MAP = [
-            "#######",
-            "#00000#",
-            "#00p00#",
-            "#00000#",
-            "#00b00#",
-            "#00g00#",
-            "#######"
+            "0######0",
+            "##0000##",
+            "#0gg000#",
+            "#0#0bbb#",
+            "#000#pg#",
+            "########"
         ]
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
@@ -28,7 +27,7 @@ class SokobanGame(tk.Tk):
         self.geometry(f"{len(self.GAME_MAP[0]) * self.CELL_SIZE}x{len(self.GAME_MAP) * self.CELL_SIZE}")
 
         self.canvas = tk.Canvas(self, width=len(self.GAME_MAP[0]) * self.CELL_SIZE, height=len(self.GAME_MAP) * self.CELL_SIZE)
-        self.canvas.pack()
+        self.canvas.place(x=0, y=0)
         for y, row in enumerate(self.GAME_MAP):
             for x, cell in enumerate(row):
                 if cell == 'p' or cell == 'u':
@@ -68,7 +67,10 @@ class SokobanGame(tk.Tk):
         if new_cell == "#" :
             return  
         elif new_cell == "g":
-            new_map[y][x] = '0'
+            if cell == "u":
+                new_map[y][x] = 'g'
+            elif cell == "p":
+                new_map[y][x] = '0'
             new_map[new_y][new_x] = 'u'
             self.player_pos = (new_x,new_y)
         elif new_cell == '0':
