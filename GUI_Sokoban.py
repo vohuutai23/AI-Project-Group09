@@ -3,6 +3,9 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
+from tkinter import ttk
+from SokobanState import *
+
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 class Level(object):
     wall = '#'
@@ -25,33 +28,20 @@ class Image(object):
 class SokobanGame(tk.Tk):
     def __init__(self):
         super().__init__()
-        # Bản đồ mẫu
-        self.GAME_MAP = [
-            "######00",
-            "#0000###",
-            "#000gg0#",
-            "#0bbbp0#",
-            "#00#0g0#",
-            "########"
-        ]
+        self.open_file_level(os.path.join(_ROOT, "map/level6.txt"))
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
 
         self.title("Sokoban")
-        self.geometry(f"{len(self.GAME_MAP[0]) * self.CELL_SIZE + 300}x{len(self.GAME_MAP) * self.CELL_SIZE}")
+        self.geometry(f"{len(self.GAME_MAP.state[0]) * self.CELL_SIZE + 300}x{len(self.GAME_MAP.state) * self.CELL_SIZE}")
 
         self.main_frame = tk.Frame(self)  # Tạo main frame
         self.main_frame.pack(side="left")
 
-        self.canvas = tk.Canvas(self.main_frame, width=len(self.GAME_MAP[0]) * self.CELL_SIZE, height=len(self.GAME_MAP) * self.CELL_SIZE, background='white')
+        self.canvas = tk.Canvas(self.main_frame, width=len(self.GAME_MAP.state[0]) * self.CELL_SIZE, height=len(self.GAME_MAP.state) * self.CELL_SIZE, background='white')
         self.canvas.pack(side="left")
 
         self.images = {}
-
-        for y, row in enumerate(self.GAME_MAP):
-            for x, cell in enumerate(row):
-                if cell == Level.player or cell == Level.box_on_target:
-                    self.player_pos = (x, y)
         self.draw_game_map()
 
         tk.Label(self.main_frame,text="SUPPORT", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
@@ -62,10 +52,22 @@ class SokobanGame(tk.Tk):
         tk.Label(self.main_frame,text="---------").pack(side="top")
         self.undo_button = tk.Button(self.main_frame, text="Undo", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "yellow", fg = "black", command=self.undo_move)
         self.undo_button.pack(side="top")
+        
+        tk.Label(self.main_frame,text="---------").pack(side="top")
+        lblLevel = tk.Label(self.main_frame, text = "LEVEL", font = ("Times", 10, "bold"))
+        lblLevel.pack(side="top")
+        n = tk.StringVar()
+        self.choosenLevel = ttk.Combobox(self.main_frame, width = 15, textvariable = n, state="readonly")
+        levels =[]
+        for i in range(1,16):
+            levels.append("level{}".format(i))
+        self.choosenLevel['values'] = tuple(levels)
+        self.choosenLevel.pack(side="top")
+        self.choosenLevel.current(0)
+        self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
 
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
-        
         
         tk.Label(self.algorithms_frame,text="ALGORITHMS", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
@@ -87,11 +89,40 @@ class SokobanGame(tk.Tk):
         self.a_star_button = tk.Button(self.algorithms_frame, text="A Star", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "blue", fg = "white", command=self.solve_with_a_star)
         self.a_star_button.pack(side="top")
         
+    def on_level_select(self,event):
+        self.focus_set()
+        self.open_file_level(os.path.join(_ROOT, "map/{}.txt".format(self.choosenLevel.get())))
+        self.draw_game_map()
+        
+    def open_file_level(self,filepath):
+        if os.path.exists(filepath) :
+            with open(filepath, "r") as file:
+                lines = file.readlines()
+            lines = [line.strip() for line in lines]
+            
+            self.GAME_MAP = Sokoban(lines)
+            for line in self.GAME_MAP.state:
+                print(line) 
+        else:
+            messagebox.showerror("Sorry","Không tìm thấy file map level!!")
+            self.GAME_MAP = Sokoban([
+                "0#####0",
+                "#00000#",
+                "#00p00#",
+                "#00000#",
+                "#00b00#",
+                "#00g00#",
+                "#######"
+            ])
         
     def draw_game_map(self):
+        for y, row in enumerate(self.GAME_MAP.state):
+            for x, cell in enumerate(row):
+                if cell == Level.player or cell == Level.player_on_target:
+                    self.player_pos = (x, y)
         self.canvas.delete("all")
 
-        for y, row in enumerate(self.GAME_MAP):
+        for y, row in enumerate(self.GAME_MAP.state):
             for x, cell in enumerate(row):
                 x1, y1 = x * self.CELL_SIZE, y * self.CELL_SIZE
                 x2, y2 = x1 + self.CELL_SIZE, y1 + self.CELL_SIZE
@@ -132,8 +163,8 @@ class SokobanGame(tk.Tk):
              
     def move_player(self, dx, dy):
         x, y = self.player_pos
-        new_map = [list(row) for row in self.GAME_MAP]
-        for row in self.GAME_MAP:
+        new_map = [list(row) for row in self.GAME_MAP.state]
+        for row in self.GAME_MAP.state:
             print(row)
         print()
         cell = new_map[y][x]
@@ -178,13 +209,13 @@ class SokobanGame(tk.Tk):
             elif new_cell_next == Level.box_target:
                 new_map[new_y2][new_x2] = Level.box_on_target
             
-        self.GAME_MAP = ["".join(r) for r in new_map]
+        self.GAME_MAP.state = ["".join(r) for r in new_map]
         self.draw_game_map()
         if self.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
         
     def is_complete(self):
-        for row in self.GAME_MAP:
+        for row in self.GAME_MAP.state:
             if Level.box in row:
                 return False
         return True
