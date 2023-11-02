@@ -211,14 +211,8 @@ class SokobanGame(tk.Tk):
             
         self.GAME_MAP.state = ["".join(r) for r in new_map]
         self.draw_game_map()
-        if self.is_complete():
+        if self.GAME_MAP.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
-        
-    def is_complete(self):
-        for row in self.GAME_MAP.state:
-            if Level.box in row:
-                return False
-        return True
 
     def restart_game(self):
         # Implement code to restart the game here

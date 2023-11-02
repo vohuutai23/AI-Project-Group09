@@ -12,3 +12,9 @@ class Sokoban:
         self.path = path
         self.cost = cost
         self.heuristic = heuristic
+        
+    def is_complete(self):
+        for row in self.state:
+            if 'b' in row:
+                return False
+        return True
