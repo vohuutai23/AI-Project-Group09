@@ -15,10 +15,10 @@ def dfs_search(initial_state, MAX_DEPTH = 1000):
     while stack:
         current_state = stack.pop()  # Lấy trạng thái hiện tại từ stack
 
-        if self.is_goal_state(current_state.puzzle):
+        if current_state.is_complete():
             return current_state  # Nếu đạt được trạng thái mục tiêu, trả về kết quả
         
-        if current_state.moves >= MAX_DEPTH: #giúp không bị treo máy
+        if current_state.depth >= MAX_DEPTH: #giúp không bị treo máy
             continue
     
         # Sinh các trạng thái kế tiếp và thêm vào stack

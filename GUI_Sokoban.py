@@ -7,14 +7,6 @@ from tkinter import ttk
 from SokobanState import *
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
-class Level(object):
-    wall = '#'
-    box = 'b'
-    box_target = 'g'
-    box_on_target = 'x'
-    player = 'p'
-    player_on_target = 'u'
-
 
 class Image(object):
     wall = os.path.join(_ROOT, 'images/wall.gif')
@@ -159,60 +151,6 @@ class SokobanGame(tk.Tk):
                     self.canvas.image = image
 
         self.canvas.pack()
-                
-             
-    def move_player(self, dx, dy):
-        x, y = self.player_pos
-        new_map = [list(row) for row in self.GAME_MAP.state]
-        for row in self.GAME_MAP.state:
-            print(row)
-        print()
-        cell = new_map[y][x]
-        new_x, new_y = x + dx, y + dy
-        new_cell = new_map[new_y][new_x]
-        if new_cell == Level.wall:
-            return  
-        
-        elif new_cell == Level.box_target:
-            if cell == Level.player_on_target:
-                new_map[y][x] = Level.box_target
-            elif cell == Level.player:
-                new_map[y][x] = '0'
-            new_map[new_y][new_x] = Level.player_on_target
-            self.player_pos = (new_x, new_y)
-            
-        elif new_cell == '0':
-            if cell == Level.player:
-                new_map[y][x] = '0'
-            else: 
-                new_map[y][x] = Level.box_target
-            new_map[new_y][new_x] = Level.player
-            self.player_pos = (new_x, new_y)
-            
-        elif new_cell == Level.box or new_cell == Level.box_on_target:
-            new_x2, new_y2 = new_x + dx, new_y + dy
-            new_cell_next = new_map[new_y2][new_x2]
-            if new_cell_next == Level.box_on_target or new_cell_next == Level.box or new_cell_next == Level.wall:
-                return
-            if cell == Level.player:
-                new_map[y][x] = '0'
-            else: 
-                new_map[y][x] = Level.box_target
-            if new_cell == Level.box_on_target:
-                new_map[new_y][new_x] = Level.player_on_target
-                self.player_pos = (new_x, new_y)
-            else:
-                new_map[new_y][new_x] = Level.player
-                self.player_pos = (new_x, new_y)
-            if new_cell_next == '0':
-                new_map[new_y2][new_x2] = Level.box
-            elif new_cell_next == Level.box_target:
-                new_map[new_y2][new_x2] = Level.box_on_target
-            
-        self.GAME_MAP.state = ["".join(r) for r in new_map]
-        self.draw_game_map()
-        if self.GAME_MAP.is_complete():
-            messagebox.showinfo("Congratulations", "You win !!")
 
     def restart_game(self):
         # Implement code to restart the game here
@@ -251,13 +189,13 @@ def main():
 
     def on_key(event):
         if event.keysym == "Up":
-            game.move_player(0, -1)
+            game.GAME_MAP.move_player(0, -1, game)
         elif event.keysym == "Down":
-            game.move_player(0, 1)
+            game.GAME_MAP.move_player(0, 1, game)
         elif event.keysym == "Left":
-            game.move_player(-1, 0)
+            game.GAME_MAP.move_player(-1, 0, game)
         elif event.keysym == "Right":
-            game.move_player(1, 0)
+            game.GAME_MAP.move_player(1, 0, game)
         
     
     game.bind("<Key>", on_key)
