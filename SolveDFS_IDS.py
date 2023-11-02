@@ -22,9 +22,9 @@ def dfs_search(initial_state, MAX_DEPTH = 1000):
             continue
     
         # Sinh các trạng thái kế tiếp và thêm vào stack
-        for move in self.generate_moves(current_state):
-            if tuple(map(tuple, move.puzzle)) not in visited:
+        for move in current_state.generate_moves():
+            if tuple(map(tuple, move.state)) not in visited:
                 stack.append(move)
-                visited.add(tuple(map(tuple, move.puzzle))) 
-                move.path = current_state.path + [move.puzzle]
+                visited.add(tuple(map(tuple, move.state))) 
+                move.path = current_state.path + [move]
     return None

@@ -4,7 +4,9 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 from tkinter import ttk
+import time
 from SokobanState import *
+from SolveDFS_IDS import *
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -108,10 +110,6 @@ class SokobanGame(tk.Tk):
             ])
         
     def draw_game_map(self):
-        for y, row in enumerate(self.GAME_MAP.state):
-            for x, cell in enumerate(row):
-                if cell == Level.player or cell == Level.player_on_target:
-                    self.player_pos = (x, y)
         self.canvas.delete("all")
 
         for y, row in enumerate(self.GAME_MAP.state):
@@ -151,6 +149,9 @@ class SokobanGame(tk.Tk):
                     self.canvas.image = image
 
         self.canvas.pack()
+        self.update()
+        if self.GAME_MAP.is_complete():
+            messagebox.showinfo("Congratulations", "You win !!")
 
     def restart_game(self):
         # Implement code to restart the game here
@@ -165,9 +166,19 @@ class SokobanGame(tk.Tk):
         pass
 
     def solve_with_dfs(self):
-        # Implement code to solve the game with DFS algorithm here
-        pass
-
+        result = dfs_search(self.GAME_MAP)
+        if result is None:
+            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
+            return
+        print("PATH")
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
+            
     def solve_with_ucs(self):
         # Implement code to solve the game with UCS algorithm here
         pass
