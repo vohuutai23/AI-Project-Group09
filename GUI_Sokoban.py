@@ -184,8 +184,18 @@ class SokobanGame(tk.Tk):
         pass
 
     def solve_with_ids(self):
-        # Implement code to solve the game with IDS algorithm here
-        pass
+        result = ids_search(self.GAME_MAP, 5)
+        if result is None:
+            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
+            return
+        print("PATH")
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
 
     def solve_with_greedy(self):
         # Implement code to solve the game with Greedy Search algorithm here
