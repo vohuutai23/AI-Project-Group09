@@ -24,7 +24,7 @@ class Sokoban:
         self.heuristic = heuristic
         self.heuristic_value = self.heuristic_calculate()
     def __lt__(self, other):
-        # Phương thức so sánh giữa hai trạng thái
+        # Phương thức so sánh giữa hai trạng thái trong PriorityQueue
         return self.heuristic_value < other.heuristic_value
     def move_player(self, dx, dy, SokobanGame = None):
         x, y = self.player_pos

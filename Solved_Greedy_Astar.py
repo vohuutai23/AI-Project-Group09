@@ -1,6 +1,6 @@
 from SokobanState import Sokoban
 from queue import PriorityQueue
-# Hàm tìm kiếm theo chiến lược "Greedy Search"
+
 def greedy_search(initial_state):
         visited = set()
         queue = PriorityQueue()
