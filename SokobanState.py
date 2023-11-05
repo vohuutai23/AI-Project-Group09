@@ -79,6 +79,7 @@ class Sokoban:
                 new_map[new_y2][new_x2] = Level.box_on_target
             
         self.state = ["".join(r) for r in new_map]
+
         if SokobanGame is not None:
             SokobanGame.draw_game_map()
                 

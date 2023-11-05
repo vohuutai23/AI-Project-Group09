@@ -7,6 +7,8 @@ from tkinter import ttk
 import time
 from SokobanState import *
 from SolveDFS_IDS import *
+from SolveBFS_UCS import *
+import time
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -21,7 +23,9 @@ class Image(object):
 
 class SokobanGame(tk.Tk):
     def __init__(self):
+        
         super().__init__()
+       
         self.open_file_level(os.path.join(_ROOT, "map/level6.txt"))
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
@@ -62,6 +66,8 @@ class SokobanGame(tk.Tk):
 
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
+        
+       
         
         tk.Label(self.algorithms_frame,text="ALGORITHMS", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
@@ -136,6 +142,7 @@ class SokobanGame(tk.Tk):
                         self.images[Image.box_on_target] = ImageTk.PhotoImage(file=Image.box_on_target)
                     image = self.images[Image.box_on_target]
                 elif cell == Level.player:
+                    
                     if Image.player not in self.images:
                         self.images[Image.player] = ImageTk.PhotoImage(file=Image.player)
                     image = self.images[Image.player]
@@ -147,24 +154,34 @@ class SokobanGame(tk.Tk):
                 if image:
                     self.canvas.create_image(x1, y1, anchor="nw", image=image)
                     self.canvas.image = image
-
+       
         self.canvas.pack()
         self.update()
+        
         if self.GAME_MAP.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
 
     def restart_game(self):
-        # Implement code to restart the game here
         pass
 
     def undo_move(self):
-        # Implement code to undo the last move here
         pass
 
     def solve_with_bfs(self):
-        # Implement code to solve the game with BFS algorithm here
-        pass
-
+        result = bfs_search(self.GAME_MAP)
+        if result is None:
+            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
+            return
+        print("PATH")
+        for sokoban in result.path:
+            
+            self.GAME_MAP = sokoban
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
+            
     def solve_with_dfs(self):
         result = dfs_search(self.GAME_MAP)
         if result is None:
@@ -180,8 +197,18 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
             
     def solve_with_ucs(self):
-        # Implement code to solve the game with UCS algorithm here
-        pass
+        result = ucs_search(self.GAME_MAP)
+        if result is None:
+            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
+            return
+        print("PATH")
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
 
     def solve_with_ids(self):
         result = ids_search(self.GAME_MAP, 5)
