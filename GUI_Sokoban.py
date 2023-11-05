@@ -9,7 +9,7 @@ from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
-
+from SolveGreedy_Astar import *
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 class Image(object):
@@ -169,9 +169,7 @@ class SokobanGame(tk.Tk):
 
     def solve_with_bfs(self):
         result = bfs_search(self.GAME_MAP)
-        if result is None:
-            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
-            return
+
         print("PATH")
         for sokoban in result.path:
             
@@ -184,9 +182,7 @@ class SokobanGame(tk.Tk):
             
     def solve_with_dfs(self):
         result = dfs_search(self.GAME_MAP)
-        if result is None:
-            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
-            return
+
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
@@ -198,9 +194,7 @@ class SokobanGame(tk.Tk):
             
     def solve_with_ucs(self):
         result = ucs_search(self.GAME_MAP)
-        if result is None:
-            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
-            return
+
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
@@ -212,9 +206,6 @@ class SokobanGame(tk.Tk):
 
     def solve_with_ids(self):
         result = ids_search(self.GAME_MAP, 5)
-        if result is None:
-            messagebox.showerror("Sorry", "Số bước lớn hơn 1000 nên không thể tìm dược !!")
-            return
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
@@ -225,12 +216,27 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
 
     def solve_with_greedy(self):
-        # Implement code to solve the game with Greedy Search algorithm here
-        pass
+        result = greedy_search(self.GAME_MAP)
+        print("PATH")
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
 
     def solve_with_a_star(self):
-        # Implement code to solve the game with A Star algorithm here
-        pass
+        result = astar_search(self.GAME_MAP)
+        print("PATH")
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
+
     
 def main():
     game = SokobanGame()

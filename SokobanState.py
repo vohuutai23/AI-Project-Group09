@@ -29,6 +29,10 @@ class Sokoban:
         self.path = path
         self.cost = cost
         self.heuristic = heuristic
+        self.heuristic_value = self.heuristic_calculate()
+    def __lt__(self, other):
+        # Phương thức so sánh giữa hai trạng thái trong PriorityQueue
+        return self.heuristic_value < other.heuristic_value
     
     def move_player(self, dx, dy, SokobanGame = None):
         x, y = self.player_pos
@@ -115,5 +119,34 @@ class Sokoban:
             return True
         return False
 
+    def heuristic_calculate(self):
+        box_positions = self.get_box_positions()
+        target_positions = self.get_target_positions()
+
+        heuristic_value = 0
+        for box_pos in box_positions:
+            min_distance = float('inf')
+            for target_pos in target_positions:
+                distance = abs(box_pos[0] - target_pos[0]) + abs(box_pos[1] - target_pos[1])
+                min_distance = min(min_distance, distance)
+            heuristic_value += min_distance
+
+        return heuristic_value
+
+    def get_box_positions(self):
+        box_positions = []
+        for y, row in enumerate(self.state):
+            for x, cell in enumerate(row):
+                if cell == Level.box or cell == Level.box_on_target:
+                    box_positions.append((x, y))
+        return box_positions
+
+    def get_target_positions(self):
+        target_positions = []
+        for y, row in enumerate(self.state):
+            for x, cell in enumerate(row):
+                if cell == Level.box_target or cell == Level.box_on_target or cell == Level.player_on_target:
+                    target_positions.append((x, y))
+        return target_positions
     
         
