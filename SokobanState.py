@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov  1 17:18:34 2023
+
+@author: DELL
+"""
 from tkinter import messagebox
 import copy
 
@@ -10,7 +16,7 @@ class Level(object):
     player_on_target = 'u'
     
 class Sokoban:
-    def __init__(self, sokoban, depth=0, path = [], cost = 0, heuristic = 0, player_pos = None):
+    def __init__(self, sokoban, depth=0, path = [], cost = 0, heuristic = 0, player_pos = None, stack = None):
         self.state = sokoban
         if player_pos is None:
             for y, row in enumerate(self.state):
@@ -24,7 +30,11 @@ class Sokoban:
         self.cost = cost
         self.heuristic = heuristic
         self.heuristic_value = self.heuristic_calculate()
-
+        if stack is None:
+            self.stack = [(self.state)]
+        else:
+            self.stack = stack
+        
     def __lt__(self, other):
         # Phương thức so sánh giữa hai trạng thái trong PriorityQueue
         return self.heuristic_value < other.heuristic_value
@@ -39,8 +49,8 @@ class Sokoban:
         new_x, new_y = x + dx, y + dy
         new_cell = new_map[new_y][new_x]
         if new_cell == Level.wall:
-            return
-
+            return  
+        
         elif new_cell == Level.box_target:
             if cell == Level.player_on_target:
                 new_map[y][x] = Level.box_target
@@ -48,15 +58,15 @@ class Sokoban:
                 new_map[y][x] = '0'
             new_map[new_y][new_x] = Level.player_on_target
             self.player_pos = (new_x, new_y)
-
+            
         elif new_cell == '0':
             if cell == Level.player:
                 new_map[y][x] = '0'
-            else:
+            else: 
                 new_map[y][x] = Level.box_target
             new_map[new_y][new_x] = Level.player
             self.player_pos = (new_x, new_y)
-
+            
         elif new_cell == Level.box or new_cell == Level.box_on_target:
             new_x2, new_y2 = new_x + dx, new_y + dy
             new_cell_next = new_map[new_y2][new_x2]
@@ -64,7 +74,7 @@ class Sokoban:
                 return
             if cell == Level.player:
                 new_map[y][x] = '0'
-            else:
+            else: 
                 new_map[y][x] = Level.box_target
             if new_cell == Level.box_on_target:
                 new_map[new_y][new_x] = Level.player_on_target
@@ -76,11 +86,13 @@ class Sokoban:
                 new_map[new_y2][new_x2] = Level.box
             elif new_cell_next == Level.box_target:
                 new_map[new_y2][new_x2] = Level.box_on_target
-
+            
         self.state = ["".join(r) for r in new_map]
+        self.stack.append(copy.copy(self.state))
+
         if SokobanGame is not None:
             SokobanGame.draw_game_map()
-
+                
         
     def is_complete(self):
         for row in self.state:

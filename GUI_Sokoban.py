@@ -9,9 +9,16 @@ from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
-import threading
 from SolveGreedy_Astar import *
+
+
+
 _ROOT = os.path.abspath(os.path.dirname(__file__))
+
+def update_file_map(new_file_map):
+    global FILE_MAP
+    FILE_MAP = new_file_map 
+
 
 class Image(object):
     wall = os.path.join(_ROOT, 'images/wall.gif')
@@ -24,9 +31,10 @@ class Image(object):
 
 class SokobanGame(tk.Tk):
     def __init__(self):
+        
         super().__init__()
-        self.time_thread_running = False
-        self.open_file_level(os.path.join(_ROOT, "map/level6.txt"))
+       
+        self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
 
@@ -88,41 +96,12 @@ class SokobanGame(tk.Tk):
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
         self.a_star_button = tk.Button(self.algorithms_frame, text="A Star", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "blue", fg = "white", command=self.solve_with_a_star)
         self.a_star_button.pack(side="top")
-
-        # Count steps and times
-        self.step_time_frame = tk.Frame(self)
-        self.step_time_frame.pack(side="bottom")
-        self.step_label = tk.Label(self.step_time_frame, text="Steps: 0", font=("Times", 12, "bold"), background="white", anchor="center")
-        self.step_label.pack(side="top")
-        self.time_label = tk.Label(self.step_time_frame, text="Time: 0.00 seconds", font=("Times", 12, "bold"), background="white", anchor="center")
-        self.time_label.pack(side="top")
-
-    def update_gui_info(self, step_counter, elapsed_time):
-        self.step_label.config(text=f"Steps: {step_counter}")
-        self.time_label.config(text=f"Time: {elapsed_time:.2f} seconds")
-        self.update()
-
-    # def update_time_label(self):
-    #     while self.time_thread_running:
-    #         end_time = time.time()
-    #         elapsed_time = end_time - self.start_time
-    #         self.time_label.config(text=f"Time: {elapsed_time:.2f} seconds")
-    #         self.update()
-    #         time.sleep(0.1)
-    #
-    # def start_update_time_thread(self, start_time):
-    #     self.time_thread_running = True
-    #     self.start_time = start_time
-    #     self.time_thread = threading.Thread(target=self.update_time_label)
-    #     self.time_thread.daemon = True
-    #     self.time_thread.start()
-
-    def stop_update_time_thread(self):
-        self.time_thread_running = False
-
+        
     def on_level_select(self,event):
+        global FILE_MAP
+        FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())
         self.focus_set()
-        self.open_file_level(os.path.join(_ROOT, "map/{}.txt".format(self.choosenLevel.get())))
+        self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
         
     def open_file_level(self,filepath):
@@ -192,61 +171,36 @@ class SokobanGame(tk.Tk):
         if self.GAME_MAP.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
 
-
     def restart_game(self):
-        pass
-
+        global FILE_MAP
+        self.open_file_level(os.path.join(_ROOT, FILE_MAP))
+        self.draw_game_map()
+        
     def undo_move(self):
-        pass
+        if self.GAME_MAP.stack:
+            new_state = self.GAME_MAP.stack.pop()
+            self.GAME_MAP = Sokoban(sokoban = new_state, stack = self.GAME_MAP.stack)
+            self.draw_game_map()
 
-    # def solve_with_bfs(self):
-    #     self.step_counter = 0
-    #     self.start_time = time.time()
-    #     # self.start_update_time_thread()
-    #     result = bfs_search(self.GAME_MAP)
-    #     end_time = time.time()
-    #     elapsed_time = end_time - self.start_time
-    #     # self.time_counter = self.stop_update_time_thread()
-    #     print("PATH")
-    #     for sokoban in result.path:
-    #         self.GAME_MAP = sokoban
-    #         self.step_counter += 1
-    #         self.update_gui_info(self.step_counter,elapsed_time)
-    #         self.draw_game_map()
-    #         for row in sokoban.state:
-    #             print(row)
-    #         print()
-    #         time.sleep(0.1)
-    #
-    #     # self.update_gui_info(self.step_counter, elapsed_time)
     def solve_with_bfs(self):
-        step_counter = 0
-        result = dfs_search(self.GAME_MAP)
+        result = bfs_search(self.GAME_MAP)
+
         print("PATH")
-        start_time = time.time()
-        # self.start_update_time_thread(start_time)
         for sokoban in result.path:
+            
             self.GAME_MAP = sokoban
-            step_counter += 1
-            elapsed_time = time.time() - start_time
-            self.update_gui_info(step_counter, elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
-        # self.stop_update_time_thread()
-
+            
     def solve_with_dfs(self):
-        step_counter = 0
         result = dfs_search(self.GAME_MAP)
+
         print("PATH")
-        start_time = time.time()
         for sokoban in result.path:
             self.GAME_MAP = sokoban
-            step_counter += 1
-            elapsed_time = time.time() - start_time
-            self.update_gui_info(step_counter, elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -254,32 +208,22 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
             
     def solve_with_ucs(self):
-        step_counter = 0
         result = ucs_search(self.GAME_MAP)
+
         print("PATH")
-        start_time = time.time()
         for sokoban in result.path:
             self.GAME_MAP = sokoban
-            step_counter += 1
-            elapsed_time = time.time() - start_time
-            self.update_gui_info(step_counter, elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
 
-
     def solve_with_ids(self):
-        step_counter = 0
-        result = ids_search(self.GAME_MAP)
+        result = ids_search(self.GAME_MAP, 5)
         print("PATH")
-        start_time = time.time()
         for sokoban in result.path:
             self.GAME_MAP = sokoban
-            step_counter += 1
-            elapsed_time = time.time() - start_time
-            self.update_gui_info(step_counter, elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -287,15 +231,10 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
 
     def solve_with_greedy(self):
-        step_counter = 0
         result = greedy_search(self.GAME_MAP)
         print("PATH")
-        start_time = time.time()
         for sokoban in result.path:
             self.GAME_MAP = sokoban
-            step_counter += 1
-            elapsed_time = time.time() - start_time
-            self.update_gui_info(step_counter, elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -303,21 +242,22 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
 
     def solve_with_a_star(self):
-        step_counter = 0
         result = astar_search(self.GAME_MAP)
         print("PATH")
-        start_time = time.time()
         for sokoban in result.path:
             self.GAME_MAP = sokoban
-            step_counter += 1
-            elapsed_time = time.time() - start_time
-            self.update_gui_info(step_counter, elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
+
+    
 def main():
+    
+    #a = "map/level11.txt"
+    #FILE_MAP = map_link(a)
+    
     game = SokobanGame()
 
     def on_key(event):
@@ -332,10 +272,6 @@ def main():
         
     
     game.bind("<Key>", on_key)
-    # Bắt đầu luồng cập nhật thời gian
-    # time_thread = threading.Thread(target=game.update_time_label, args=(time.time(),))
-    # time_thread.daemon = True
-    # time_thread.start()
     game.mainloop()
 
 if __name__ == "__main__":
