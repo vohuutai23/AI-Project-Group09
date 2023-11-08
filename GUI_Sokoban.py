@@ -51,7 +51,7 @@ class SokobanGame(tk.Tk):
         self.canvas.pack(side="left")
 
         self.images = {}
-        self.draw_game_map()
+        self.step_counter = -1
 
         tk.Label(self.main_frame,text="SUPPORT", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
         tk.Label(self.main_frame,text="---------").pack(side="top")
@@ -78,7 +78,6 @@ class SokobanGame(tk.Tk):
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
         
-       
         
         tk.Label(self.algorithms_frame,text="ALGORITHMS", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
@@ -107,6 +106,7 @@ class SokobanGame(tk.Tk):
         self.step_label.pack(side="top")
         self.time_label = tk.Label(self.step_time_frame, text="Time: 0.00 seconds", font=("Times", 12, "bold"), background="white", anchor="center")
         self.time_label.pack(side="top")
+        self.draw_game_map()
 
     def update_gui_info(self, step_counter, elapsed_time):
         self.step_label.config(text=f"Steps: {step_counter}")
@@ -132,13 +132,14 @@ class SokobanGame(tk.Tk):
         else:
             messagebox.showerror("Sorry","Không tìm thấy file map level!!")
             self.GAME_MAP = Sokoban([
-                "0#####0",
-                "#00000#",
-                "#00p00#",
-                "#00000#",
-                "#00b00#",
-                "#00g00#",
-                "#######"
+                "0#####00",
+                "#00000#0",
+                "#00p00#0",
+                "#00000#0",
+                "#00b00#0",
+                "#00g00#0",
+                "#######0",
+                "00000000"
             ])
         
     def draw_game_map(self):
@@ -182,6 +183,10 @@ class SokobanGame(tk.Tk):
                     self.canvas.image = image
        
         self.canvas.pack()
+        if self.GAME_MAP.path == []:
+            self.step_counter = self.step_counter + 1
+            self.step_label.config(text="Steps: {}".format(self.step_counter))
+        
         self.update()
         
         if self.GAME_MAP.is_complete():
@@ -192,6 +197,8 @@ class SokobanGame(tk.Tk):
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
         self.check_use_algorithm = False
+        self.step_counter = 0
+        self.update_gui_info(self.step_counter,0)
         
     def undo_move(self):
         if self.GAME_MAP.stack:
@@ -201,7 +208,9 @@ class SokobanGame(tk.Tk):
 
 
     def solve_with_bfs(self):
-        self.step_counter = 0
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -251,7 +260,9 @@ class SokobanGame(tk.Tk):
     #     # self.stop_update_time_thread()
     #     self.check_use_algorithm = True
     def solve_with_dfs(self):
-        self.step_counter = 0
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -276,7 +287,9 @@ class SokobanGame(tk.Tk):
         self.check_use_algorithm = True
 
     def solve_with_ucs(self):
-        self.step_counter = 0
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -302,7 +315,9 @@ class SokobanGame(tk.Tk):
 
 
     def solve_with_ids(self):
-        self.step_counter = 0
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -327,7 +342,9 @@ class SokobanGame(tk.Tk):
         self.check_use_algorithm = True
 
     def solve_with_greedy(self):
-        self.step_counter = 0
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -352,7 +369,9 @@ class SokobanGame(tk.Tk):
         self.check_use_algorithm = True
 
     def solve_with_a_star(self):
-        self.step_counter = 0
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return

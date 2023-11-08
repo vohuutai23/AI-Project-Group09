@@ -1,15 +1,17 @@
 import tkinter as tk
 from tkinter import *
+import os
+_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
 root = tk.Tk()
 root.resizable(False, False)
 root.title("Sokoban game")
-root.geometry("800x500+500+100")
-canvas = Canvas(root, height=500, width=800, bd=0, highlightthickness=1, relief="ridge")
+root.geometry("800x400+500+100")
+canvas = Canvas(root, height=400, width=800, bd=0, highlightthickness=1, relief="ridge")
 canvas.place(x=0, y=0)
-background_img = PhotoImage(file=f"images/background2.png")
-background = canvas.create_image(400.0, 250.0, image=background_img)
+background_img = PhotoImage(file=os.path.join(_ROOT,f"images/background4_1.png"))
+background = canvas.create_image(400.0, 200.0, image=background_img)
 #info = canvas.create_text(400.0, 100, text="SOKOBAN", fill="red", font=("Rockwell Extra Bold", int(80.0)))
 
 
@@ -20,21 +22,21 @@ def start_game():
     import GUI_level_selection
     GUI_level_selection.main()
 
-start_img = PhotoImage(file=f"images/start2.png")
+start_img = PhotoImage(file=os.path.join(_ROOT,f"images/start_game.png"))
 start = Button(image=start_img, borderwidth=0, highlightthickness=0, relief="flat", command = start_game)
-start.place(x=318, y=380, width=200, height=86)
+start.place(x=330, y=300, width=150, height=70)
 
 
-info_img = PhotoImage(file=f"images/SOKOBAN.png")
-info = canvas.create_image(400.0, 100.0, image=info_img)
+#info_img = PhotoImage(file=f"images/SOKOBAN.png")
+#info = canvas.create_image(400.0, 100.0, image=info_img)
 
 # Danh sách chọn chế độ chơi
-game_modes = ["1 Player", "Player VS Player", "AI VS AI", "Player VS AI"]
+game_modes = ["1 Player", "2 Player", "AI VS AI", "Player VS AI"]
 selected_mode = StringVar(value=game_modes[0])
 
 # Label hiển thị chế độ chơi
-mode_label = Label(root, textvariable=selected_mode, bg="#4392F1", fg="white", font=("Arial", 16))
-mode_label.place(x=318, y=200, width=200, height=86)
+mode_label = Label(root, textvariable=selected_mode, bg="#CFB58D", fg="#86603E", font=("Goudy Stout", 10))
+mode_label.place(x=300, y=200, width=200, height=50)
 
 # Nút "<" để di chuyển sang chế độ trước đó
 def previous_mode():
@@ -43,7 +45,7 @@ def previous_mode():
     selected_mode.set(game_modes[previous_index])
 
 previous_button = Button(root, text="<", command=previous_mode)
-previous_button.place(x=250, y=200, width=50, height=86)
+previous_button.place(x=275, y=200, width=25, height=50)
 
 # Nút ">" để di chuyển sang chế độ kế tiếp
 def next_mode():
@@ -52,7 +54,7 @@ def next_mode():
     selected_mode.set(game_modes[next_index])
 
 next_button = Button(root, text=">", command=next_mode)
-next_button.place(x=530, y=200, width=50, height=86)
+next_button.place(x=500, y=200, width=25, height=50)
 
 
 
