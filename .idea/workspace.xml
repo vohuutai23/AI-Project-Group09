@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7e0b0742-fa28-454f-91d3-6ab3c7196acf" name="Changes" comment="Greedy and A star">
-      <change afterPath="$PROJECT_DIR$/SolveGreedy_Astar.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level1.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level2.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level3.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level4.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level5.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI_Sokoban.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI_Sokoban.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SokobanState.py" beforeDir="false" afterPath="$PROJECT_DIR$/SokobanState.py" afterDir="false" />
-    </list>
+    <list default="true" id="7e0b0742-fa28-454f-91d3-6ab3c7196acf" name="Changes" comment="Greedy and A star" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,6 +55,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "developer",
     "last_opened_file_path": "D:/AI-Project-Group09"
   }
 }]]></component>
