@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7e0b0742-fa28-454f-91d3-6ab3c7196acf" name="Changes" comment="Greedy and A star">
-      <change afterPath="$PROJECT_DIR$/SolveGreedy_Astar.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level1.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level2.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level3.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level4.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/map/level5.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI_Sokoban.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI_Sokoban.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SokobanState.py" beforeDir="false" afterPath="$PROJECT_DIR$/SokobanState.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/map/level5.txt" beforeDir="false" afterPath="$PROJECT_DIR$/map/level5.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,12 +30,12 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "vohuutai23"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;vohuutai23&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -60,13 +56,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;huutai&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/AI-Project-Group09&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -110,6 +107,17 @@
     </task>
     <option name="localTasksCounter" value="5" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Greedy and A star" />
