@@ -16,7 +16,7 @@ class Level(object):
     player_on_target = 'u'
     
 class Sokoban:
-    def __init__(self, sokoban, depth=0, path = [], cost = 0, heuristic = 0, player_pos = None):
+    def __init__(self, sokoban, depth=0, path = [], cost = 0, heuristic = 0, player_pos = None, stack = None):
         self.state = sokoban
         if player_pos is None:
             for y, row in enumerate(self.state):
@@ -30,6 +30,11 @@ class Sokoban:
         self.cost = cost
         self.heuristic = heuristic
         self.heuristic_value = self.heuristic_calculate()
+        if stack is None:
+            self.stack = [(self.state)]
+        else:
+            self.stack = stack
+        
     def __lt__(self, other):
         # Phương thức so sánh giữa hai trạng thái trong PriorityQueue
         return self.heuristic_value < other.heuristic_value
@@ -83,6 +88,7 @@ class Sokoban:
                 new_map[new_y2][new_x2] = Level.box_on_target
             
         self.state = ["".join(r) for r in new_map]
+        self.stack.append(copy.copy(self.state))
 
         if SokobanGame is not None:
             SokobanGame.draw_game_map()

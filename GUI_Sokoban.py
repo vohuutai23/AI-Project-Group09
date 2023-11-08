@@ -10,7 +10,15 @@ from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
 from SolveGreedy_Astar import *
+
+
+
 _ROOT = os.path.abspath(os.path.dirname(__file__))
+
+def update_file_map(new_file_map):
+    global FILE_MAP
+    FILE_MAP = new_file_map 
+
 
 class Image(object):
     wall = os.path.join(_ROOT, 'images/wall.gif')
@@ -26,7 +34,7 @@ class SokobanGame(tk.Tk):
         
         super().__init__()
        
-        self.open_file_level(os.path.join(_ROOT, "map/level6.txt"))
+        self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
 
@@ -90,8 +98,10 @@ class SokobanGame(tk.Tk):
         self.a_star_button.pack(side="top")
         
     def on_level_select(self,event):
+        global FILE_MAP
+        FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())
         self.focus_set()
-        self.open_file_level(os.path.join(_ROOT, "map/{}.txt".format(self.choosenLevel.get())))
+        self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
         
     def open_file_level(self,filepath):
@@ -162,10 +172,15 @@ class SokobanGame(tk.Tk):
             messagebox.showinfo("Congratulations", "You win !!")
 
     def restart_game(self):
-        pass
-
+        global FILE_MAP
+        self.open_file_level(os.path.join(_ROOT, FILE_MAP))
+        self.draw_game_map()
+        
     def undo_move(self):
-        pass
+        if self.GAME_MAP.stack:
+            new_state = self.GAME_MAP.stack.pop()
+            self.GAME_MAP = Sokoban(sokoban = new_state, stack = self.GAME_MAP.stack)
+            self.draw_game_map()
 
     def solve_with_bfs(self):
         result = bfs_search(self.GAME_MAP)
@@ -239,6 +254,10 @@ class SokobanGame(tk.Tk):
 
     
 def main():
+    
+    #a = "map/level11.txt"
+    #FILE_MAP = map_link(a)
+    
     game = SokobanGame()
 
     def on_key(event):
