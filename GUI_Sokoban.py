@@ -1,9 +1,10 @@
 
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk
+
 import os
 from tkinter import ttk
+from PIL import Image, ImageTk
 import time
 from SokobanState import *
 from SolveDFS_IDS import *
@@ -14,7 +15,7 @@ from SolveGreedy_Astar import *
 
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
-
+FILE_MAP = "map/level6.txt"
 def update_file_map(new_file_map):
     global FILE_MAP
     FILE_MAP = new_file_map 
@@ -33,7 +34,9 @@ class SokobanGame(tk.Tk):
     def __init__(self):
         
         super().__init__()
-       
+
+        self.check_use_algorithm = False
+
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
@@ -96,6 +99,19 @@ class SokobanGame(tk.Tk):
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
         self.a_star_button = tk.Button(self.algorithms_frame, text="A Star", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "blue", fg = "white", command=self.solve_with_a_star)
         self.a_star_button.pack(side="top")
+
+        # Count steps and times
+        self.step_time_frame = tk.Frame(self)
+        self.step_time_frame.pack(side="bottom")
+        self.step_label = tk.Label(self.step_time_frame, text="Steps: 0", font=("Times", 12, "bold"), background="white", anchor="center")
+        self.step_label.pack(side="top")
+        self.time_label = tk.Label(self.step_time_frame, text="Time: 0.00 seconds", font=("Times", 12, "bold"), background="white", anchor="center")
+        self.time_label.pack(side="top")
+
+    def update_gui_info(self, step_counter, elapsed_time):
+        self.step_label.config(text=f"Steps: {step_counter}")
+        self.time_label.config(text=f"Time: {elapsed_time:.2f} seconds")
+        self.update()
         
     def on_level_select(self,event):
         global FILE_MAP
@@ -175,6 +191,7 @@ class SokobanGame(tk.Tk):
         global FILE_MAP
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
+        self.check_use_algorithm = False
         
     def undo_move(self):
         if self.GAME_MAP.stack:
@@ -182,75 +199,182 @@ class SokobanGame(tk.Tk):
             self.GAME_MAP = Sokoban(sokoban = new_state, stack = self.GAME_MAP.stack)
             self.draw_game_map()
 
+
     def solve_with_bfs(self):
+        self.step_counter = 0
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
         result = bfs_search(self.GAME_MAP)
-
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
         print("PATH")
         for sokoban in result.path:
-            
             self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
-            
+        self.check_use_algorithm = True
+        # self.update_gui_info(self.step_counter, elapsed_time)
+
+    # def solve_with_bfs(self):
+    #     step_counter = 0
+    #     # self.restart_game()
+    #     if self.check_use_algorithm == True:
+    #         messagebox.showwarning("Restart","You need press the RESTART button!")
+    #         return
+    #     result = bfs_search(self.GAME_MAP)
+    #     if result == None:
+    #         messagebox.showinfo("Problem","Don't find the path!")
+    #     print("PATH")
+    #     start_time = time.time()
+    #     # self.start_update_time_thread(start_time)
+    #     for sokoban in result.path:
+    #         self.GAME_MAP = sokoban
+    #         step_counter += 1
+    #         elapsed_time = time.time() - start_time
+    #         self.update_gui_info(step_counter, elapsed_time)
+    #         self.draw_game_map()
+    #         for row in sokoban.state:
+    #             print(row)
+    #         print()
+    #         time.sleep(0.1)
+    #     # self.stop_update_time_thread()
+    #     self.check_use_algorithm = True
     def solve_with_dfs(self):
+        self.step_counter = 0
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
         result = dfs_search(self.GAME_MAP)
-
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
-            
+        self.check_use_algorithm = True
+
     def solve_with_ucs(self):
+        self.step_counter = 0
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
         result = ucs_search(self.GAME_MAP)
-
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
+        self.check_use_algorithm = True
+
 
     def solve_with_ids(self):
-        result = ids_search(self.GAME_MAP, 5)
+        self.step_counter = 0
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
+        result = ids_search(self.GAME_MAP,5)
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
+        self.check_use_algorithm = True
 
     def solve_with_greedy(self):
+        self.step_counter = 0
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
         result = greedy_search(self.GAME_MAP)
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
+        self.check_use_algorithm = True
 
     def solve_with_a_star(self):
+        self.step_counter = 0
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
         result = astar_search(self.GAME_MAP)
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
+        self.check_use_algorithm = True
 
     
 def main():

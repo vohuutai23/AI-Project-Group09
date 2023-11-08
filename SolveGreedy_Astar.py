@@ -37,7 +37,7 @@ def astar_search(initial_state):
                 g_cost = current_state.cost + 1
                 f_cost = g_cost + move.heuristic_value  # Tổng chi phí di chuyển và heuristic
                 queue.put((f_cost, move))
-                move.cost = g_cost  # Cập nhật chi phí di chuyển
+                # move.cost = g_cost  # Cập nhật chi phí di chuyển
                 move.path = current_state.path + [move]
 
     return None
