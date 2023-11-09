@@ -19,7 +19,7 @@ class level_selection(tk.Tk):
         
         self.canvas = Canvas(self, bg="#4392F1", height=500, width=800, bd=0, highlightthickness=1, relief="ridge")
         self.canvas.place(x=0, y=0)
-        self.background_img = PhotoImage(file=os.path.join(_ROOT,f"images/background3.png"))
+        self.background_img = PhotoImage(file=os.path.join(_ROOT,f"images/background2.png"))
         self.background = self.canvas.create_image(400.0, 250.0, image=self.background_img)
         
         self.lv1_img = tk.PhotoImage(file=os.path.join(_ROOT,f"images/lv1_2.png"))
@@ -89,7 +89,7 @@ class level_selection(tk.Tk):
         
         
         #back_img = PhotoImage(file=f"assets/back.png")
-        self.back_img = tk.PhotoImage(file=f"images/back.png")
+        self.back_img = tk.PhotoImage(file=os.path.join(_ROOT,f"images/back.png"))
         self.back = tk.Button(image=self.back_img, borderwidth=0, highlightthickness=0, relief="flat",command=self.back_to_start)
         self.back.place(x=350, y=450, width=100, height=40)
          # Import GUI_start để chuyển về GUI_start
