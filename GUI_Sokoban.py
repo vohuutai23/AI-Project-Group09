@@ -211,6 +211,8 @@ class SokobanGame(tk.Tk):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+            
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -263,6 +265,8 @@ class SokobanGame(tk.Tk):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+            
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -290,6 +294,8 @@ class SokobanGame(tk.Tk):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -318,6 +324,8 @@ class SokobanGame(tk.Tk):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+            
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -345,6 +353,8 @@ class SokobanGame(tk.Tk):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+            
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
@@ -372,6 +382,8 @@ class SokobanGame(tk.Tk):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+            
         if self.check_use_algorithm == True:
             messagebox.showwarning("Restart","You need press the RESTART button!")
             return
