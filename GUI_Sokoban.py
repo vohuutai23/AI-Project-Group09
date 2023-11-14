@@ -106,11 +106,20 @@ class SokobanGame(tk.Tk):
         self.step_label.pack(side="top")
         self.time_label = tk.Label(self.step_time_frame, text="Time: 0.00 seconds", font=("Times", 12, "bold"), background="white", anchor="center")
         self.time_label.pack(side="top")
+        
+        self.cell_count_label = tk.Label(self.step_time_frame, text="Cells Processed: 0", font=("Arial", 12))
+        self.cell_count_label.pack()
+        
+        
         self.draw_game_map()
 
     def update_gui_info(self, step_counter, elapsed_time):
         self.step_label.config(text=f"Steps: {step_counter}")
         self.time_label.config(text=f"Time: {elapsed_time:.2f} seconds")
+        self.update()
+        
+    def update_gui_info2(self, step_counter):
+        self.cell_count_label.config(text=f"Cells Processed: {step_counter}")
         self.update()
         
     def on_level_select(self,event):
@@ -199,6 +208,7 @@ class SokobanGame(tk.Tk):
         self.check_use_algorithm = False
         self.step_counter = 0
         self.update_gui_info(self.step_counter,0)
+        self.update_gui_info2(0)
         
     def undo_move(self):
         if self.GAME_MAP.stack:
@@ -218,7 +228,7 @@ class SokobanGame(tk.Tk):
             return
         self.start_time = time.time()
         # self.start_update_time_thread()
-        result = bfs_search(self.GAME_MAP)
+        result, cell_count = bfs_search(self.GAME_MAP)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
         end_time = time.time()
@@ -229,6 +239,7 @@ class SokobanGame(tk.Tk):
             self.GAME_MAP = sokoban
             self.step_counter += 1
             self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info2(cell_count)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -261,6 +272,7 @@ class SokobanGame(tk.Tk):
     #         time.sleep(0.1)
     #     # self.stop_update_time_thread()
     #     self.check_use_algorithm = True
+    
     def solve_with_dfs(self):
         if self.step_counter > 0:
             self.step_counter = 0
@@ -272,7 +284,7 @@ class SokobanGame(tk.Tk):
             return
         self.start_time = time.time()
         # self.start_update_time_thread()
-        result = dfs_search(self.GAME_MAP)
+        result, cell_count = dfs_search(self.GAME_MAP)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
         end_time = time.time()
@@ -283,6 +295,7 @@ class SokobanGame(tk.Tk):
             self.GAME_MAP = sokoban
             self.step_counter += 1
             self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info2(cell_count)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -293,30 +306,36 @@ class SokobanGame(tk.Tk):
     def solve_with_ucs(self):
         if self.step_counter > 0:
             self.step_counter = 0
-            messagebox.showwarning("Steps","Steps will be rested")
-            self.update_gui_info(self.step_counter,0)
-
+            messagebox.showwarning("Steps", "Steps will be rested")
+            self.update_gui_info(self.step_counter, 0)
+    
         if self.check_use_algorithm == True:
-            messagebox.showwarning("Restart","You need press the RESTART button!")
+            messagebox.showwarning("Restart", "You need press the RESTART button!")
             return
+    
         self.start_time = time.time()
-        # self.start_update_time_thread()
-        result = ucs_search(self.GAME_MAP)
-        if result == None:
-            messagebox.showinfo("Problem","Don't find the path!")
+        result, cell_count = ucs_search(self.GAME_MAP)
+        
+        if result is None:
+            messagebox.showinfo("Problem", "Don't find the path!")
+            return
+        
         end_time = time.time()
         elapsed_time = end_time - self.start_time
-        # self.time_counter = self.stop_update_time_thread()
+    
         print("PATH")
         for sokoban in result.path:
             self.GAME_MAP = sokoban
             self.step_counter += 1
-            self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info(self.step_counter, elapsed_time)
+            self.update_gui_info2(cell_count)
             self.draw_game_map()
+            
             for row in sokoban.state:
                 print(row)
             print()
             time.sleep(0.1)
+        
         self.check_use_algorithm = True
 
 
@@ -331,7 +350,7 @@ class SokobanGame(tk.Tk):
             return
         self.start_time = time.time()
         # self.start_update_time_thread()
-        result = ids_search(self.GAME_MAP,5)
+        result, cell_count = ids_search(self.GAME_MAP,5)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
         end_time = time.time()
@@ -342,6 +361,7 @@ class SokobanGame(tk.Tk):
             self.GAME_MAP = sokoban
             self.step_counter += 1
             self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info2(cell_count)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -360,7 +380,7 @@ class SokobanGame(tk.Tk):
             return
         self.start_time = time.time()
         # self.start_update_time_thread()
-        result = greedy_search(self.GAME_MAP)
+        result, cell_count = greedy_search(self.GAME_MAP)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
         end_time = time.time()
@@ -371,6 +391,7 @@ class SokobanGame(tk.Tk):
             self.GAME_MAP = sokoban
             self.step_counter += 1
             self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info2(cell_count)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)
@@ -389,7 +410,7 @@ class SokobanGame(tk.Tk):
             return
         self.start_time = time.time()
         # self.start_update_time_thread()
-        result = astar_search(self.GAME_MAP)
+        result, cell_count = astar_search(self.GAME_MAP)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
         end_time = time.time()
@@ -400,6 +421,7 @@ class SokobanGame(tk.Tk):
             self.GAME_MAP = sokoban
             self.step_counter += 1
             self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info2(cell_count)
             self.draw_game_map()
             for row in sokoban.state:
                 print(row)

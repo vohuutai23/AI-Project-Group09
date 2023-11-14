@@ -5,12 +5,12 @@ def greedy_search(initial_state):
         visited = set()
         queue = PriorityQueue()
         queue.put((0, initial_state))
-
+        cell_counter = 0 
         while not queue.empty():
             _, current_state = queue.get()
 
             if current_state.is_complete():
-                return current_state
+                return current_state, cell_counter
 
             for move in current_state.generate_moves():
                 if tuple(map(tuple, move.state)) not in visited:
@@ -18,18 +18,19 @@ def greedy_search(initial_state):
                     heuristic_value = move.heuristic_value
                     queue.put((heuristic_value,move))
                     move.path = current_state.path + [move]
-        return None
+                    cell_counter += 1 
+        return None, cell_counter
 
 def astar_search(initial_state):
     visited = set()
     queue = PriorityQueue()
     queue.put((0, initial_state))
-
+    cell_counter = 0 
     while not queue.empty():
         _, current_state = queue.get()
 
         if current_state.is_complete():
-            return current_state
+            return current_state, cell_counter
 
         for move in current_state.generate_moves():
             if tuple(map(tuple, move.state)) not in visited:
@@ -39,5 +40,6 @@ def astar_search(initial_state):
                 queue.put((f_cost, move))
                 # move.cost = g_cost  # Cập nhật chi phí di chuyển
                 move.path = current_state.path + [move]
+                cell_counter += 1 
 
-    return None
+    return None, cell_counter
