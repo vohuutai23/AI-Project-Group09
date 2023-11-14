@@ -58,10 +58,10 @@ def hill_climbing(initial_state):
                     visited.add(tuple(map(tuple, move.state)))
                     move.path = current_state.path + [move]
                     if move.heuristic_value <= current_state.heuristic_value:
-                            stack.append(move)
+                        stack.append(move)
                     else:
-                            state_initial.append(move)
+                        state_initial.append(move)
 
-        return None
+    return None
 
 
