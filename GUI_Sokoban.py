@@ -1,4 +1,4 @@
-
+import pygame
 import tkinter as tk
 from tkinter import messagebox
 
@@ -438,6 +438,7 @@ def main():
     
     game.bind("<Key>", on_key)
     game.mainloop()
+    pygame.mixer.music.stop()
 
 if __name__ == "__main__":
     main()
