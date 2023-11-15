@@ -185,9 +185,7 @@ class SokobanGame(tk.Tk):
                     self.canvas.create_image(x1, y1, anchor="nw", image=image)
                     self.canvas.image = image
        
-        # self.canvas.pack()
-        # if self.GAME_MAP.path == []:
-        #     self.step_counter = self.step_counter + 1
+
         #     self.step_label.config(text="Steps: {}".format(self.step_counter))
         #
         # self.update()
@@ -200,7 +198,7 @@ class SokobanGame(tk.Tk):
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
         self.check_use_algorithm = False
-        self.step_counter = 0
+        # self.step_counter = 0
         self.update_gui_info(self.step_counter,0)
         
     def undo_move(self):
