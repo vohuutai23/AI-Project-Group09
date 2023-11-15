@@ -64,10 +64,10 @@ def moved_box(new_state, current_state):
     old_player_pos = current_state.player_pos
 
     # Lấy vị trí giữa người chơi cũ và mới
-    between_pos = (old_player_pos[0] + (new_player_pos[0] - old_player_pos[0]) // 2,
-                   old_player_pos[1] + (new_player_pos[1] - old_player_pos[1]) // 2)
-
+    #between_pos = (old_player_pos[0] + (new_player_pos[0] - old_player_pos[0]) // 2, old_player_pos[1] + (new_player_pos[1] - old_player_pos[1]) // 2)
+    if old_player_pos != new_player_pos:
     # Kiểm tra xem vị trí giữa có phải là vị trí của hộp trong trạng thái cũ hay không
-    if current_state.state[between_pos[1]][between_pos[0]] in [Level.box, Level.box_on_target]:
-        return True
+        if current_state.state[new_player_pos[1]][new_player_pos[0]] in [Level.box, Level.box_on_target]:
+        #if current_state.state[between_pos[1]][between_pos[0]] in [Level.box, Level.box_on_target]:
+            return True
     return False
