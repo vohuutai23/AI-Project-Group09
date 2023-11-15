@@ -41,7 +41,7 @@ def ucs_search(initial_state):
 
         for move in current_state.generate_moves():
             if tuple(map(tuple, move.state)) not in visited:
-                new_cost = new_cost = cost + calculate_move_cost(move, current_state)
+                new_cost = cost + calculate_move_cost(move, current_state)
                 queue.append((new_cost, move))
                 visited.add(tuple(map(tuple, move.state))) 
                 move.path = current_state.path + [move]

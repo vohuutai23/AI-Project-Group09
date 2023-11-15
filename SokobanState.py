@@ -42,9 +42,9 @@ class Sokoban:
     def move_player(self, dx, dy, SokobanGame = None):
         x, y = self.player_pos
         new_map = [list(row) for row in self.state]
-        for row in self.state:
-            print(row)
-        print()
+        # for row in self.state:
+        #     print(row)
+        # print()
         cell = new_map[y][x]
         new_x, new_y = x + dx, y + dy
         new_cell = new_map[new_y][new_x]
@@ -136,7 +136,6 @@ class Sokoban:
                 distance = abs(box_pos[0] - target_pos[0]) + abs(box_pos[1] - target_pos[1])
                 min_distance = min(min_distance, distance)
             heuristic_value += min_distance
-
         return heuristic_value
 
     def get_box_positions(self):
