@@ -1,4 +1,4 @@
-
+import pygame
 import tkinter as tk
 from tkinter import messagebox
 
@@ -74,6 +74,10 @@ class SokobanGame(tk.Tk):
         self.choosenLevel.pack(side="top")
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
+        
+        tk.Label(self.main_frame,text="---------").pack(side="top")
+        self.check_button = tk.Button(self.main_frame, text="Check", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "silver", fg = "black", command=self.check_path)
+        self.check_button.pack(side="top")
 
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
@@ -98,6 +102,9 @@ class SokobanGame(tk.Tk):
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
         self.a_star_button = tk.Button(self.algorithms_frame, text="A Star", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "blue", fg = "white", command=self.solve_with_a_star)
         self.a_star_button.pack(side="top")
+        tk.Label(self.algorithms_frame,text="---------").pack(side="top")
+        self.hill_climbing_button = tk.Button(self.algorithms_frame, text="Hill Climbing", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "aquamarine4", fg = "white", command=self.solve_with_hill_climbing)
+        self.hill_climbing_button.pack(side="top")
 
         # Count steps and times
         self.step_time_frame = tk.Frame(self)
@@ -112,6 +119,12 @@ class SokobanGame(tk.Tk):
         
         
         self.draw_game_map()
+        
+    def check_path(self):
+        if astar_search(self.GAME_MAP) is None:
+            messagebox.showinfo("Result","There is no solution, please click Restart !!")
+            return
+        messagebox.showinfo("Result","There is a solution, wish you success !!")
 
     def update_gui_info(self, step_counter, elapsed_time):
         self.step_label.config(text=f"Steps: {step_counter}")
@@ -191,12 +204,10 @@ class SokobanGame(tk.Tk):
                     self.canvas.create_image(x1, y1, anchor="nw", image=image)
                     self.canvas.image = image
        
-        self.canvas.pack()
-        if self.GAME_MAP.path == []:
-            self.step_counter = self.step_counter + 1
-            self.step_label.config(text="Steps: {}".format(self.step_counter))
-        
-        self.update()
+
+        #     self.step_label.config(text="Steps: {}".format(self.step_counter))
+        #
+        # self.update()
         
         if self.GAME_MAP.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
@@ -206,7 +217,7 @@ class SokobanGame(tk.Tk):
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
         self.check_use_algorithm = False
-        self.step_counter = 0
+        # self.step_counter = 0
         self.update_gui_info(self.step_counter,0)
         self.update_gui_info2(0)
         
@@ -429,6 +440,35 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
         self.check_use_algorithm = True
 
+    def solve_with_hill_climbing(self):
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be rested")
+            self.update_gui_info(self.step_counter,0)
+
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
+        result = hill_climbing(self.GAME_MAP)
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+            return
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        # self.time_counter = self.stop_update_time_thread()
+        print("PATH")
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
+            self.draw_game_map()
+            for row in sokoban.state:
+                print(row)
+            print()
+            time.sleep(0.1)
+        self.check_use_algorithm = True
     
 def main():
     
@@ -450,6 +490,7 @@ def main():
     
     game.bind("<Key>", on_key)
     game.mainloop()
+    pygame.mixer.music.stop()
 
 if __name__ == "__main__":
     main()
