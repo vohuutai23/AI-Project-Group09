@@ -185,12 +185,12 @@ class SokobanGame(tk.Tk):
                     self.canvas.create_image(x1, y1, anchor="nw", image=image)
                     self.canvas.image = image
        
-        self.canvas.pack()
-        if self.GAME_MAP.path == []:
-            self.step_counter = self.step_counter + 1
-            self.step_label.config(text="Steps: {}".format(self.step_counter))
-        
-        self.update()
+        # self.canvas.pack()
+        # if self.GAME_MAP.path == []:
+        #     self.step_counter = self.step_counter + 1
+        #     self.step_label.config(text="Steps: {}".format(self.step_counter))
+        #
+        # self.update()
         
         if self.GAME_MAP.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
