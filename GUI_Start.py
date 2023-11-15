@@ -1,8 +1,12 @@
+import pygame
 import tkinter as tk
 from tkinter import *
 import os
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
+pygame.mixer.init()
+pygame.mixer.music.load(os.path.join(_ROOT,"music_game.mp3"))
+pygame.mixer.music.play(-1)
 
 root = tk.Tk()
 root.resizable(False, False)

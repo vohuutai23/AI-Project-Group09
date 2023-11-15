@@ -1,4 +1,4 @@
-
+import pygame
 import tkinter as tk
 from tkinter import messagebox
 
@@ -74,6 +74,10 @@ class SokobanGame(tk.Tk):
         self.choosenLevel.pack(side="top")
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
+        
+        tk.Label(self.main_frame,text="---------").pack(side="top")
+        self.check_button = tk.Button(self.main_frame, text="Check", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "silver", fg = "black", command=self.check_path)
+        self.check_button.pack(side="top")
 
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
@@ -110,6 +114,12 @@ class SokobanGame(tk.Tk):
         self.time_label = tk.Label(self.step_time_frame, text="Time: 0.00 seconds", font=("Times", 12, "bold"), background="white", anchor="center")
         self.time_label.pack(side="top")
         self.draw_game_map()
+        
+    def check_path(self):
+        if astar_search(self.GAME_MAP) is None:
+            messagebox.showinfo("Result","There is no solution, please click Restart !!")
+            return
+        messagebox.showinfo("Result","There is a solution, wish you success !!")
 
     def update_gui_info(self, step_counter, elapsed_time):
         self.step_label.config(text=f"Steps: {step_counter}")
@@ -458,6 +468,7 @@ def main():
     
     game.bind("<Key>", on_key)
     game.mainloop()
+    pygame.mixer.music.stop()
 
 if __name__ == "__main__":
     main()
