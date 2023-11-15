@@ -2,26 +2,34 @@ from SokobanState import Sokoban
 from queue import PriorityQueue
 
 def greedy_search(initial_state):
-    visited = set()
-    state_list = [(0, initial_state)]
+  visited = set()
+  queue = PriorityQueue()
+  queue.put((0, initial_state))
+  cell_counter = 0 
+  while not queue.empty():
+      _, current_state = queue.get()
 
-    while state_list:
-        state_list.sort(key=lambda x: x[0])
-        _, current_state = state_list.pop(0)
+      if current_state.is_complete():
+          return current_state, cell_counter
 
-        if current_state.is_complete():
-            return current_state
+      for move in current_state.generate_moves():
+          if tuple(map(tuple, move.state)) not in visited:
+              visited.add(tuple(map(tuple, move.state)))
+              heuristic_value = move.heuristic_value
+              queue.put((heuristic_value,move))
+              move.path = current_state.path + [move]
+              cell_counter += 1 
+  return None, cell_counter
 
-        for move in current_state.generate_moves():
-            if tuple(map(tuple, move.state)) not in visited:
-                visited.add(tuple(map(tuple, move.state)))
-                heuristic_val = move.heuristic_value
-                state_list.append((heuristic_val, move))
-                move.path = current_state.path + [move]
-
-    return None
+  
 def astar_search(initial_state):
     visited = set()
+
+    queue = PriorityQueue()
+    queue.put((0, initial_state))
+    cell_counter = 0 
+    while not queue.empty():
+        _, current_state = queue.get()
     state_list = [(0, initial_state)]
 
     while state_list:
@@ -29,7 +37,7 @@ def astar_search(initial_state):
         _, current_state = state_list.pop(0)
 
         if current_state.is_complete():
-            return current_state
+            return current_state, cell_counter
 
         for move in current_state.generate_moves():
             if tuple(map(tuple, move.state)) not in visited:
@@ -40,8 +48,9 @@ def astar_search(initial_state):
                 state_list.append((f_func, move))
                 current_state.cost_astar = g_cost
                 move.path = current_state.path + [move]
+                cell_counter += 1 
+    return None, cell_counter
 
-    return None
 
 def hill_climbing(initial_state):
     visited = set()
@@ -63,5 +72,4 @@ def hill_climbing(initial_state):
                         state_initial.append(move)
 
     return None
-
 
