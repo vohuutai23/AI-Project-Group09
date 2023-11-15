@@ -426,7 +426,7 @@ class SokobanGame(tk.Tk):
             return
         self.start_time = time.time()
         # self.start_update_time_thread()
-        result, cell_count = hill_climbing(self.GAME_MAP)
+        result, cell_count = BeamSearch(self.GAME_MAP, 2)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
         end_time = time.time()

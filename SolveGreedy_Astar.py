@@ -1,5 +1,6 @@
 from SokobanState import *
 from queue import PriorityQueue
+from collections import deque
 
 
 def greedy_search(initial_state):
@@ -96,6 +97,35 @@ def hill_climbing(initial_state):
 #
 #     # Nếu quá trình lặp không tìm thấy trạng thái hoàn thành, trả về trạng thái hiện tại và số ô đã thăm
 #     return current_state, cell_counter
+
+def BeamSearch(initial_state, k):
+    queue = deque([initial_state])  
+  
+    visited = set()  # Lưu trữ các trạng thái đã xem
+    visited.add(tuple(map(tuple, initial_state.state)))
+    cell_counter = 0
+    while queue:
+        k_loop = k
+        current_state = queue.popleft()  
+  
+        if current_state.is_complete():
+            return current_state, cell_counter  # Nếu đạt được trạng thái mục tiêu, trả về kết quả
+        
+        schedule = current_state.generate_moves()
+        schedule = sorted(schedule , key=lambda x: x.heuristic_value, reverse=True)
+        # Sinh các trạng thái kế tiếp và thêm vào queue
+        for move in schedule:
+            if tuple(map(tuple, move.state)) not in visited:
+                visited.add(tuple(map(tuple, move.state))) 
+                move.path = current_state.path + [move]
+                cell_counter += 1
+                if k_loop > 0:
+                    queue.append(move)
+                    k_loop = k_loop - 1
+
+    return None, cell_counter
+
+
 def calculate_move_cost(new_state, current_state):
     base_cost = 1  # Chi phí cơ bản cho mỗi bước di chuyển
     box_move_cost = 2  # Chi phí khi di chuyển hộp
