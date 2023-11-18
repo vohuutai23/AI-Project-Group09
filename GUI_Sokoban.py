@@ -11,7 +11,7 @@ from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
 from SolveGreedy_Astar import *
-
+from History import *
 
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -36,10 +36,11 @@ class SokobanGame(tk.Tk):
         super().__init__()
 
         self.check_use_algorithm = False
-
+        self.LEVEL = FILE_MAP[4:-4]
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 100
+        self.HISTORY = []
 
         self.title("Sokoban")
         self.geometry(f"{len(self.GAME_MAP.state[0]) * self.CELL_SIZE + 300}x{len(self.GAME_MAP.state) * self.CELL_SIZE}")
@@ -78,6 +79,10 @@ class SokobanGame(tk.Tk):
         tk.Label(self.main_frame,text="---------").pack(side="top")
         self.check_button = tk.Button(self.main_frame, text="Check", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "silver", fg = "black", command=self.check_path)
         self.check_button.pack(side="top")
+        
+        tk.Label(self.main_frame,text="---------").pack(side="top")
+        self.history_button = tk.Button(self.main_frame, text="History", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "gold", fg = "black", command=self.history)
+        self.history_button.pack(side="top")
 
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
@@ -123,6 +128,9 @@ class SokobanGame(tk.Tk):
         
         self.draw_game_map()
         
+    def history(self):
+        History(self.HISTORY)
+        
     def check_path(self):
         result, count = astar_search(self.GAME_MAP)
         if result is None:
@@ -143,6 +151,7 @@ class SokobanGame(tk.Tk):
         global FILE_MAP
         FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())
         self.focus_set()
+        self.LEVEL = FILE_MAP[4:-4]
         self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.draw_game_map()
         
@@ -258,6 +267,8 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.check_use_algorithm = True
+        self.HISTORY.append((self.LEVEL,"BFS",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         # self.update_gui_info(self.step_counter, elapsed_time)
 
     # def solve_with_bfs(self):
@@ -309,6 +320,8 @@ class SokobanGame(tk.Tk):
             self.update_gui_info2(cell_count)
             self.draw_game_map()
             time.sleep(0.1)
+        self.HISTORY.append((self.LEVEL,"DFS",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_ucs(self):
@@ -339,7 +352,8 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
 
             time.sleep(0.1)
-        
+        self.HISTORY.append((self.LEVEL,"UCS",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
 
 
@@ -366,6 +380,8 @@ class SokobanGame(tk.Tk):
             self.update_gui_info2(cell_count)
             self.draw_game_map()
             time.sleep(0.1)
+        self.HISTORY.append((self.LEVEL,"IDS",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_greedy(self):
@@ -391,6 +407,8 @@ class SokobanGame(tk.Tk):
             self.update_gui_info2(cell_count)
             self.draw_game_map()
             time.sleep(0.1)
+        self.HISTORY.append((self.LEVEL,"GREEDY",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_a_star(self):
@@ -416,6 +434,8 @@ class SokobanGame(tk.Tk):
             self.update_gui_info2(cell_count)
             self.draw_game_map()
             time.sleep(0.1)
+        self.HISTORY.append((self.LEVEL,"A START",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_hill_climbing(self):
@@ -445,6 +465,8 @@ class SokobanGame(tk.Tk):
             self.update_gui_info2(cell_count)
             self.draw_game_map()
             time.sleep(0.1)
+        self.HISTORY.append((self.LEVEL,"HILL CLIMBING",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
     def solve_with_beam_search(self):
         if self.step_counter > 0:
@@ -469,6 +491,8 @@ class SokobanGame(tk.Tk):
             self.update_gui_info2(cell_count)
             self.draw_game_map()
             time.sleep(0.1)
+        self.HISTORY.append((self.LEVEL,"BEAM SEARCH",elapsed_time,cell_count,self.step_counter))
+        print(self.HISTORY)
         self.check_use_algorithm = True
     
 def main():
