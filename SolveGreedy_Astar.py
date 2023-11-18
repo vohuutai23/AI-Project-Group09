@@ -49,26 +49,47 @@ def astar_search(initial_state):
     return None, cell_counter
 
 def hill_climbing(initial_state):
-    visited = set()
-    state_initial = [(initial_state)]
-    cell_counter = 0
-    while state_initial:
-        stack = [state_initial.pop()]
-        while stack:
-            current_state = stack.pop()
-            if current_state.is_complete():
-                return current_state, cell_counter
-            for move in current_state.generate_moves():
-                if tuple(map(tuple, move.state)) not in visited:
-                    cell_counter += 1
-                    visited.add(tuple(map(tuple, move.state)))
-                    move.path = current_state.path + [move]
-                    if move.heuristic_value <= current_state.heuristic_value:
-                        stack.append(move)
-                    else:
-                        state_initial.append(move)
+    stack = [(initial_state)]  # Stack để lưu trữ các trạng thái cần xem xét
 
+    visited = set()  # Lưu trữ các trạng thái đã xem
+    cell_counter = 0
+    while stack:
+        current_state = stack.pop()  # Lấy trạng thái hiện tại từ stack
+
+        if current_state.is_complete():
+            return current_state, cell_counter  # Nếu đạt được trạng thái mục tiêu, trả về kết quả
+
+        # Sinh các trạng thái kế tiếp và thêm vào stack
+        for move in current_state.generate_moves():
+            if tuple(map(tuple, move.state)) not in visited:
+                visited.add(tuple(map(tuple, move.state)))
+                if move.heuristic_value < current_state.heuristic_value:
+                    stack.append(move)
+                    move.path = current_state.path + [move]
+                cell_counter += 1
     return None, cell_counter
+
+# def hill_climbing(initial_state):
+#     visited = set()
+#     state_initial = [(initial_state)]
+#     cell_counter = 0
+#     while state_initial:
+#         stack = [state_initial.pop()]
+#         while stack:
+#             current_state = stack.pop()
+#             if current_state.is_complete():
+#                 return current_state, cell_counter
+#             for move in current_state.generate_moves():
+#                 if tuple(map(tuple, move.state)) not in visited:
+#                     cell_counter += 1
+#                     visited.add(tuple(map(tuple, move.state)))
+#                     move.path = current_state.path + [move]
+#                     if move.heuristic_value <= current_state.heuristic_value:
+#                         stack.append(move)
+#                     else:
+#                         state_initial.append(move)
+#
+#     return None, cell_counter
 # def hill_climbing(initial_state):
 #     current_state = initial_state
 #     visited = set()

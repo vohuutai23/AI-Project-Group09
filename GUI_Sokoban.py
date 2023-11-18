@@ -103,7 +103,10 @@ class SokobanGame(tk.Tk):
         self.a_star_button = tk.Button(self.algorithms_frame, text="A Star", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "blue", fg = "white", command=self.solve_with_a_star)
         self.a_star_button.pack(side="top")
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
-        self.hill_climbing_button = tk.Button(self.algorithms_frame, text="Hill Climbing", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "aquamarine4", fg = "white", command=self.solve_with_hill_climbing)
+        self.a_star_button = tk.Button(self.algorithms_frame, text="Hill Climbing", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "#838B8B", fg = "white", command=self.solve_with_hill_climbing)
+        self.a_star_button.pack(side="top")
+        tk.Label(self.algorithms_frame,text="---------").pack(side="top")
+        self.hill_climbing_button = tk.Button(self.algorithms_frame, text="Beam Search", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "aquamarine4", fg = "white", command=self.solve_with_beam_search)
         self.hill_climbing_button.pack(side="top")
 
         # Count steps and times
@@ -416,6 +419,34 @@ class SokobanGame(tk.Tk):
         self.check_use_algorithm = True
 
     def solve_with_hill_climbing(self):
+        if self.step_counter > 0:
+            self.step_counter = 0
+            messagebox.showwarning("Steps","Steps will be reseted!")
+            self.update_gui_info(self.step_counter,0)
+
+        if self.check_use_algorithm == True:
+            messagebox.showwarning("Restart","You need to press the RESTART button!")
+            return
+        self.start_time = time.time()
+        # self.start_update_time_thread()
+        result, cell_count = hill_climbing(self.GAME_MAP)
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
+        if result == None:
+            messagebox.showinfo("Problem","Don't find the path!")
+            self.update_gui_info2(cell_count)
+            self.time_label.config(text=f"Time: {elapsed_time:.2f} seconds")
+            return
+
+        for sokoban in result.path:
+            self.GAME_MAP = sokoban
+            self.step_counter += 1
+            self.update_gui_info(self.step_counter,elapsed_time)
+            self.update_gui_info2(cell_count)
+            self.draw_game_map()
+            time.sleep(0.1)
+        self.check_use_algorithm = True
+    def solve_with_beam_search(self):
         if self.step_counter > 0:
             self.step_counter = 0
             messagebox.showwarning("Steps","Steps will be reseted!")
