@@ -22,12 +22,12 @@ def update_file_map(new_file_map):
 
 
 class Image(object):
-    wall = os.path.join(_ROOT, 'images/wall.gif')
-    box = os.path.join(_ROOT, 'images/box.gif')
-    box_target = os.path.join(_ROOT, 'images/box_target.gif')
-    box_on_target = os.path.join(_ROOT, 'images/box_on_target.gif')
-    player = os.path.join(_ROOT, 'images/player.gif')
-    player_on_target = os.path.join(_ROOT, 'images/player_on_target.gif')
+    wall = os.path.join(_ROOT, 'images/map_resize/wall.gif')
+    box = os.path.join(_ROOT, 'images/map_resize/box.gif')
+    box_target = os.path.join(_ROOT, 'images/map_resize/box_target.gif')
+    box_on_target = os.path.join(_ROOT, 'images/map_resize/box_on_target.gif')
+    player = os.path.join(_ROOT, 'images/map_resize/player.gif')
+    player_on_target = os.path.join(_ROOT, 'images/map_resize/player_on_target.gif')
 
 
 class SokobanGame(tk.Tk):
@@ -42,11 +42,11 @@ class SokobanGame(tk.Tk):
         self.open_file_level_2(os.path.join(_ROOT, FILE_MAP))
 
         # Kích thước ô trong trò chơi (đơn vị pixel)
-        self.CELL_SIZE = 100
+        self.CELL_SIZE = 50
 
         self.title("Sokoban")
         self.geometry(
-            f"{len(self.GAME_MAP_1.state[0]) * self.CELL_SIZE + 300}x{len(self.GAME_MAP_1.state) * self.CELL_SIZE}")
+            f"{10 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
 
         self.frame_player1 = tk.Frame(self)  # Tạo main frame
         self.frame_player1.pack(side="left")
@@ -154,7 +154,7 @@ class SokobanGame(tk.Tk):
 
 
         if self.GAME_MAP_1.is_complete():
-            messagebox.showinfo("Congratulations", "You win !!")
+            messagebox.showinfo("Congratulations", "Player 1 win !!")
 
     def draw_game_map_2(self):
 
@@ -199,7 +199,7 @@ class SokobanGame(tk.Tk):
 
 
         if self.GAME_MAP_2.is_complete():
-            messagebox.showinfo("Congratulations", "You win !!")
+            messagebox.showinfo("Congratulations", "Player 2 win !!")
 
 
 
@@ -220,27 +220,48 @@ def main():
     #         game.GAME_MAP_1.move_player(-1, 0, game)
     #     elif event.keysym == "Right":
     #         game.GAME_MAP_1.move_player(1, 0, game)
+    # def on_key(event):
+    #     # Xử lý đầu vào cho cả hai người chơi
+    #     if event.keysym in ["Up", "Down", "Left", "Right"]:
+    #         if event.keysym == "Up":
+    #             game.GAME_MAP_1.move_player_1(0, -1, game)
+    #         elif event.keysym == "Down":
+    #             game.GAME_MAP_1.move_player_1(0, 1, game)
+    #         elif event.keysym == "Left":
+    #             game.GAME_MAP_1.move_player_1(-1, 0, game)
+    #         elif event.keysym == "Right":
+    #             game.GAME_MAP_1.move_player_1(1, 0, game)
+    #     elif event.keysym in ["w", "s", "a", "d"]:
+    #         if event.keysym == "w":
+    #             game.GAME_MAP_2.move_player_2(0, -1, game)
+    #         elif event.keysym == "s":
+    #             game.GAME_MAP_2.move_player_2(0, 1, game)
+    #         elif event.keysym == "a":
+    #             game.GAME_MAP_2.move_player_2(-1, 0, game)
+    #         elif event.keysym == "d":
+    #             game.GAME_MAP_2.move_player_2(1, 0, game)
+
+
     def on_key(event):
         # Xử lý đầu vào cho cả hai người chơi
-        if event.keysym in ["Up", "Down", "Left", "Right"]:
-            if event.keysym == "Up":
-                game.GAME_MAP_1.move_player_1(0, -1, game)
-            elif event.keysym == "Down":
-                game.GAME_MAP_1.move_player_1(0, 1, game)
-            elif event.keysym == "Left":
-                game.GAME_MAP_1.move_player_1(-1, 0, game)
-            elif event.keysym == "Right":
-                game.GAME_MAP_1.move_player_1(1, 0, game)
-        elif event.keysym in ["w", "s", "a", "d"]:
+        if event.keysym in ["w", "s", "a", "d"]:
             if event.keysym == "w":
-                game.GAME_MAP_2.move_player_2(0, -1, game)
+                game.GAME_MAP_1.move_player_1(0, -1, game)
             elif event.keysym == "s":
-                game.GAME_MAP_2.move_player_2(0, 1, game)
+                game.GAME_MAP_1.move_player_1(0, 1, game)
             elif event.keysym == "a":
-                game.GAME_MAP_2.move_player_2(-1, 0, game)
+                game.GAME_MAP_1.move_player_1(-1, 0, game)
             elif event.keysym == "d":
+                game.GAME_MAP_1.move_player_1(1, 0, game)
+        elif event.keysym in ["Up", "Down", "Left", "Right"]:
+            if event.keysym == "Up":
+                game.GAME_MAP_2.move_player_2(0, -1, game)
+            elif event.keysym == "Down":
+                game.GAME_MAP_2.move_player_2(0, 1, game)
+            elif event.keysym == "Left":
+                game.GAME_MAP_2.move_player_2(-1, 0, game)
+            elif event.keysym == "Right":
                 game.GAME_MAP_2.move_player_2(1, 0, game)
-
     game.bind("<Key>", on_key)
     game.mainloop()
 
