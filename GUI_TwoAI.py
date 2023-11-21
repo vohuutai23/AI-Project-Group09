@@ -46,27 +46,46 @@ class SokobanGame(tk.Tk):
 
         self.title("Sokoban")
         self.geometry(
-            f"{14 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
+            f"{19 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
 
         self.frame_player1 = tk.Frame(self)  # Tạo main frame
         self.frame_player1.pack(side="left")
 
         self.canvas_player1 = tk.Canvas(self.frame_player1, width=len(self.GAME_MAP_1.state[0]) * self.CELL_SIZE,
                                 height=len(self.GAME_MAP_1.state) * self.CELL_SIZE, background='white')
-        self.canvas_player1.pack(side="left")
+        self.canvas_player1.pack(side="right")
+
+        # Dropdown cho Player 1
+        self.label_player1 = tk.Label(self.frame_player1, text="Player 1")
+        self.label_player1.pack()
+        self.algorithm_choice_player1 = ttk.Combobox(self.frame_player1, values=["BFS", "DFS"])
+        self.algorithm_choice_player1.pack(side="left")
+        self.algorithm_choice_player1.set("Chọn thuật toán")
+
 
         self.frame_player2 = tk.Frame(self)  # Tạo main frame
         self.frame_player2.pack(side="right")
         self.canvas_player2 = tk.Canvas(self.frame_player2, width=len(self.GAME_MAP_2.state[0]) * self.CELL_SIZE,
                                         height=len(self.GAME_MAP_2.state) * self.CELL_SIZE, background='white')
-        self.canvas_player2.pack(side="right")
+        self.canvas_player2.pack(side="left")
+
+        # Dropdown cho Player 2
+        self.label_player2 = tk.Label(self.frame_player2, text="Player 2")
+        self.label_player2.pack(side="top")
+        self.algorithm_choice_player2 = ttk.Combobox(self.frame_player2, values=["BFS", "DFS"])
+        self.algorithm_choice_player2.pack(side="right")
+        self.algorithm_choice_player2.set("Chọn thuật toán")
+
+
         self.images = {}
         self.step_counter = -1
 
         self.control_frame = tk.Frame(self)
         self.control_frame.pack(side="top", fill="x")
 
-
+        # Nút Start
+        self.start_button = tk.Button(self.control_frame, text="Start", command=self.start_game)
+        self.start_button.pack(side="bottom")
 
         n = tk.StringVar()
         self.choosenLevel = ttk.Combobox(self.control_frame, width = 15, textvariable = n, state="readonly")
@@ -77,6 +96,9 @@ class SokobanGame(tk.Tk):
         self.choosenLevel.pack(side="top")
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
+
+
+
 
         self.draw_game_map_1()
         self.draw_game_map_2()
@@ -222,6 +244,11 @@ class SokobanGame(tk.Tk):
         if self.GAME_MAP_2.is_complete():
             messagebox.showinfo("Congratulations", "Player 2 win !!")
 
+    def start_game(self):
+        # Hàm xử lý khi nhấn nút Start
+        algorithm1 = self.algorithm_choice_player1.get()
+        algorithm2 = self.algorithm_choice_player2.get()
+        # Thực hiện các hành động dựa trên lựa chọn thuật toán ở đây
 
 
 
