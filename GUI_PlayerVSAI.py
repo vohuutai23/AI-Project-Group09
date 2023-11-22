@@ -1,11 +1,13 @@
 import pygame
 import tkinter as tk
 from tkinter import messagebox
-
+import threading
 import os
 from tkinter import ttk
 from PIL import Image, ImageTk
 import time
+
+from GUI_Start import start_GUI_Start
 from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
@@ -29,7 +31,12 @@ class Image(object):
     player = os.path.join(_ROOT, 'images/map_resize/player.gif')
     player_on_target = os.path.join(_ROOT, 'images/map_resize/player_on_target.gif')
 
-
+def create_instruction_label(parent_frame, text):
+    instruction_label = tk.Label(parent_frame, text=text, font=("Helvetica", 10))
+    instruction_label.pack(side="bottom")
+    # Thêm khoảng cách s
+    tk.Frame(parent_frame, height=10).pack()
+    return instruction_label
 class SokobanGame(tk.Tk):
     def __init__(self):
 
@@ -43,37 +50,44 @@ class SokobanGame(tk.Tk):
         self.Player_completed = False
         self.check_result_algorithm = True
         self.algorithm_running = False
+        self.player_win = False
+        self.AI_win = False
+        self.algorithm_selected =""
+
         #self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.open_file_level_1(os.path.join(_ROOT, FILE_MAP))
         self.open_file_level_2(os.path.join(_ROOT, FILE_MAP))
-
+        self.time_delay_step = 0.1
         # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 50
 
         self.title("Sokoban")
         self.geometry(
-            f"{18 * self.CELL_SIZE + 300}x{9 * self.CELL_SIZE}")
+            f"{13 * self.CELL_SIZE + 300}x{10 * self.CELL_SIZE}")
+
+        self.label_pvp = tk.Label(self, text="Player vs AI", font=("Helvetica", 16))
+        self.label_pvp.pack(side="top", pady=10)
 
         self.frame_player = tk.Frame(self)  # Tạo main frame
         self.frame_player.pack(side="left")
 
         self.canvas_player = tk.Canvas(self.frame_player, width=len(self.GAME_MAP_1.state[0]) * self.CELL_SIZE,
                                 height=len(self.GAME_MAP_1.state) * self.CELL_SIZE, background='white')
-        self.canvas_player.pack(side="bottom")
+        self.canvas_player.pack(side="top")
 
         # Dropdown cho Player 1
-        self.label_player = tk.Label(self.frame_player, text="Player")
-        self.label_player.pack(side="top")
+        self.label_player = create_instruction_label(self.frame_player, "Player 1: Use W, A, S, D or Arrow keys (Right, Left, Up, Down) to move")
+        #self.label_player.pack(side="bottom")
 
 
         self.frame_AI = tk.Frame(self)  # Tạo main frame
         self.frame_AI.pack(side="right")
         self.canvas_AI = tk.Canvas(self.frame_AI, width=len(self.GAME_MAP_2.state[0]) * self.CELL_SIZE,
                                         height=len(self.GAME_MAP_2.state) * self.CELL_SIZE, background='white')
-        self.canvas_AI.pack(side="bottom")
+        self.canvas_AI.pack(side="top")
 
-        self.label_AI = tk.Label(self.frame_AI, text="AI")
-        self.label_AI.pack(side="top")
+        self.label_AI = create_instruction_label(self.frame_AI, "AI")
+        #self.label_AI.pack(side="bottom")
 
 
 
@@ -82,12 +96,14 @@ class SokobanGame(tk.Tk):
 
         self.control_frame = tk.Frame(self)
         self.control_frame.pack(side="top", fill="x")
-
+        # Thêm khoảng cách s
+        tk.Frame(self.control_frame, height=20).pack()
         self.comparison_choice = ttk.Combobox(self.control_frame, values=["Step", "Speed"], state="readonly")
         self.comparison_choice.pack(fill="x", expand=True)
         self.comparison_choice.set("Chọn kiểu so sánh")
         self.comparison_choice.bind("<<ComboboxSelected>>", self.on_comparison_choice)
-
+        # Thêm khoảng cách s
+        tk.Frame(self.control_frame, height=10).pack()
         self.algorithm_choice_AI = ttk.Combobox(self.control_frame,
                                                 values=["BFS", "DFS", "IDS", "UCS", "Greedy", "A Star", "Hill Climbing",
                                                         "Beam Search"], state="readonly")
@@ -109,10 +125,8 @@ class SokobanGame(tk.Tk):
         self.time_delay.pack_forget()
 
 
-        # Nút Start
-        self.start_button = tk.Button(self.control_frame, text="Start", command=self.start_game)
-        self.start_button.pack(side="bottom")
-
+        # Thêm khoảng cách s
+        tk.Frame(self.control_frame, height=10).pack()
         n = tk.StringVar()
         self.choosenLevel = ttk.Combobox(self.control_frame, width = 15, textvariable = n, state="readonly")
         levels =[]
@@ -122,13 +136,32 @@ class SokobanGame(tk.Tk):
         self.choosenLevel.pack(side="top")
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
+        # Thêm khoảng cách s
+        tk.Frame(self.control_frame, height=10).pack()
 
-        self.restart_button = tk.Button(self.control_frame, text="Restart", command=self.restart_game)
-        self.restart_button.pack(side="bottom")
+        self.restart_button = tk.Button(self.control_frame, text="Restart", borderwidth=3, width=10, height=2,
+                                        background="green", fg="white", command=self.restart_game)
+        self.restart_button.pack()
+        # Thêm khoảng cách s
+        tk.Frame(self.control_frame, height=10).pack()
+        # Nút Start
+        self.start_button = tk.Button(self.control_frame, text="Start", borderwidth=3, width=10, height=2,
+                                      background="orange", fg="white", command=self.start_game)
 
+        self.start_button.pack()
+        tk.Frame(self.control_frame, height=10).pack()
+        # Nút Start
+        self.back_button = tk.Button(self.control_frame, text="Back Home", borderwidth=3, width=10, height=2,
+                                      background="red", fg="white", command=self.back_to_home)
+
+        self.back_button.pack()
 
         self.draw_game_map_1()
         self.draw_game_map_2()
+
+    def back_to_home(self):
+        self.destroy()  # Đóng cửa sổ SokobanGame
+        start_GUI_Start()  # Mở cửa sổ GUI_Start
     def on_comparison_choice(self, event):
         choice = self.comparison_choice.get()
         self.focus_set()
@@ -265,6 +298,7 @@ class SokobanGame(tk.Tk):
                 self.Player_completed = True
                 return
             else:
+                self.stop_game()
                 messagebox.showinfo("Congratulations", "Player 1 win !!")
 
     def draw_game_map_2(self):
@@ -315,6 +349,7 @@ class SokobanGame(tk.Tk):
                 self.AI_completed = True
                 return
             else:
+                self.stop_game()
                 messagebox.showinfo("Congratulations", "AI win !!")
 
 
@@ -481,6 +516,25 @@ class SokobanGame(tk.Tk):
             time.sleep(timeDelay)
 
         self.after_algorithm()
+
+    def run_algorithm(self):
+        if self.algorithm_selected == "BFS":
+            self.solve_with_bfs(self.time_delay_step)
+        elif self.algorithm_selected == "DFS":
+            self.solve_with_dfs(self.time_delay_step)
+        elif self.algorithm_selected == "IDS":
+            self.solve_with_ids(self.time_delay_step)
+        elif self.algorithm_selected == "UCS":
+            self.solve_with_ucs(self.time_delay_step)
+        elif self.algorithm_selected == "Greedy":
+            self.solve_with_greedy(self.time_delay_step)
+        elif self.algorithm_selected == "A Star":
+            self.solve_with_a_star(self.time_delay_step)
+        elif self.algorithm_selected == "Hill Climbing":
+            self.solve_with_hill_climbing(self.time_delay_step)
+        elif self.algorithm_selected == "Beam Search":
+            self.solve_with_beam_search(self.time_delay_step)
+
     def start_game(self):
         self.game_started = True
         # Hàm xử lý khi nhấn nút Start
@@ -488,7 +542,9 @@ class SokobanGame(tk.Tk):
         check = False
         comparison_type = self.comparison_choice.get()
         algorithm_type = self.algorithm_choice_AI.get()
+        self.algorithm_selected = self.algorithm_choice_AI.get()
         time_delay = self.time_delay.get()
+
         if comparison_type not in ["Step", "Speed"]:
             # Nếu chưa chọn, hiển thị thông báo
             messagebox.showwarning("Thông báo", "Mời bạn chọn kiểu so sánh trước khi bắt đầu.")
@@ -519,24 +575,29 @@ class SokobanGame(tk.Tk):
             elif algorithm_type == "Beam Search":
                 self.solve_with_beam_search(0.1)
         else:
-            time_delay_int = float(time_delay)
-            if algorithm_type == "BFS":
-                self.solve_with_bfs(time_delay_int)
-            elif algorithm_type == "DFS":
-                self.solve_with_dfs(time_delay_int)
-            elif algorithm_type == "IDS":
-                self.solve_with_ids(time_delay_int)
-            elif algorithm_type == "UCS":
-                self.solve_with_ucs(time_delay_int)
-            elif algorithm_type == "Greedy":
-                self.solve_with_greedy(time_delay_int)
-            elif algorithm_type == "A Star":
-                self.solve_with_a_star(time_delay_int)
-            elif algorithm_type == "Hill Climbing":
-                self.solve_with_hill_climbing(time_delay_int)
-            elif algorithm_type == "Beam Search":
-                self.solve_with_beam_search(time_delay_int)
+            self.time_delay_step = float(time_delay)
+            algorithm_thread = threading.Thread(target=self.run_algorithm)
+            algorithm_thread.start()
+
+            # elif algorithm_type == "DFS":
+            #     self.solve_with_dfs(time_delay_int)
+            # elif algorithm_type == "IDS":
+            #     self.solve_with_ids(time_delay_int)
+            # elif algorithm_type == "UCS":
+            #     self.solve_with_ucs(time_delay_int)
+            # elif algorithm_type == "Greedy":
+            #     self.solve_with_greedy(time_delay_int)
+            # elif algorithm_type == "A Star":
+            #     self.solve_with_a_star(time_delay_int)
+            # elif algorithm_type == "Hill Climbing":
+            #     self.solve_with_hill_climbing(time_delay_int)
+            # elif algorithm_type == "Beam Search":
+            #     self.solve_with_beam_search(time_delay_int)
         # Thực hiện các hành động dựa trên lựa chọn thuật toán ở đây
+
+    def stop_game(self):
+        self.game_started = False
+        self.algorithm_running = False
 
     def after_algorithm(self):
         if self.check_result_algorithm:
@@ -584,28 +645,7 @@ class SokobanGame(tk.Tk):
                     self.check_results()
 
 def main():
-    # a = "map/level11.txt"
-    # FILE_MAP = map_link(a)
-
     game = SokobanGame()
-
-
-
-    # def on_key(event):
-    #     valid_move = False
-    #     # Xử lý đầu vào cho cả hai người chơi
-    #     if event.keysym in ["w", "s", "a", "d", "Up", "Down", "Left", "Right"]:
-    #         if event.keysym == "w" or event.keysym == "Up":
-    #             valid_move = game.GAME_MAP_1.move_player_1(0, -1, game)
-    #         elif event.keysym == "s" or event.keysym == "Down":
-    #             valid_move = game.GAME_MAP_1.move_player_1(0, 1, game)
-    #         elif event.keysym == "a" or event.keysym == "Left":
-    #             valid_move = game.GAME_MAP_1.move_player_1(-1, 0, game)
-    #         elif event.keysym == "d" or event.keysym == "Right":
-    #             valid_move = game.GAME_MAP_1.move_player_1(1, 0, game)
-    #         if valid_move and game.comparison_choice.get() == "Step":
-    #             game.player_steps += 1
-    #             game.label_step_player.config(text=f"Steps Player: {game.player_steps}")
 
     game.bind("<Key>", game.on_key)
     game.mainloop()
