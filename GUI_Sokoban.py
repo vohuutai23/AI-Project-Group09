@@ -6,6 +6,8 @@ import os
 from tkinter import ttk
 from PIL import Image, ImageTk
 import time
+
+from GUI_Start import start_GUI_Start
 from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
@@ -84,9 +86,16 @@ class SokobanGame(tk.Tk):
         self.history_button = tk.Button(self.main_frame, text="History", font = ("Times", 12, "bold"), borderwidth = 3, width = 10, height = 2, background = "gold", fg = "black", command=self.history)
         self.history_button.pack(side="top")
 
+        tk.Label(self.main_frame, text="---------").pack(side="top")
+        self.back_button = tk.Button(self.main_frame, text="Back Home", font=("Times", 12, "bold"), borderwidth=3,
+                                     width=10, height=2, background="red", fg="black", command=self.back_to_home)
+
+        self.back_button.pack(side="top")
+
         self.algorithms_frame = tk.Frame(self)
         self.algorithms_frame.pack(side="top")
-        
+
+
         
         tk.Label(self.algorithms_frame,text="ALGORITHMS", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
         tk.Label(self.algorithms_frame,text="---------").pack(side="top")
@@ -127,7 +136,9 @@ class SokobanGame(tk.Tk):
         
         
         self.draw_game_map()
-        
+    def back_to_home(self):
+        self.destroy()  # Đóng cửa sổ SokobanGame
+        start_GUI_Start()  # Mở cửa sổ GUI_Start
     def history(self):
         History(self.HISTORY)
         
