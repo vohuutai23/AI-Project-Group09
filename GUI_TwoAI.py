@@ -11,6 +11,7 @@ from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
 from SolveGreedy_Astar import *
+import pygame
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 FILE_MAP = "map/level6.txt"
@@ -48,33 +49,37 @@ class SokobanGame(tk.Tk):
         self.geometry(
             f"{19 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
 
-        self.frame_player1 = tk.Frame(self)  # Tạo main frame
-        self.frame_player1.pack(side="left")
+        self.frame_AI1 = tk.Frame(self)  # Tạo main frame
+        self.frame_AI1.pack(side="left")
 
-        self.canvas_player1 = tk.Canvas(self.frame_player1, width=len(self.GAME_MAP_1.state[0]) * self.CELL_SIZE,
+        self.canvas_AI1 = tk.Canvas(self.frame_AI1, width=len(self.GAME_MAP_1.state[0]) * self.CELL_SIZE,
                                 height=len(self.GAME_MAP_1.state) * self.CELL_SIZE, background='white')
-        self.canvas_player1.pack(side="right")
+        self.canvas_AI1.pack(side="right")
 
-        # Dropdown cho Player 1
-        self.label_player1 = tk.Label(self.frame_player1, text="Player 1")
-        self.label_player1.pack()
-        self.algorithm_choice_player1 = ttk.Combobox(self.frame_player1, values=["BFS", "DFS"])
-        self.algorithm_choice_player1.pack(side="left")
-        self.algorithm_choice_player1.set("Chọn thuật toán")
+        # Dropdown cho AI 1
+        self.label_AI1 = tk.Label(self.frame_AI1, text="AI 1", font=("Times", 12, "bold"), background="white", anchor="center")
+        self.label_AI1.pack()
+        self.label_step_AI1 = tk.Label(self.frame_AI1, text="Steps: 0", font=("Times", 12, "bold"), background="white", anchor="center")
+        self.label_step_AI1.pack()
+        self.algorithm_choice_AI1 = ttk.Combobox(self.frame_AI1, values=["BFS", "DFS", "UCS", "IDS", "Greedy Search", "A Star","Hill Climbing","Beam Search"])
+        self.algorithm_choice_AI1.pack(side="left")
+        self.algorithm_choice_AI1.set("Choose algorithm AI1")
 
 
-        self.frame_player2 = tk.Frame(self)  # Tạo main frame
-        self.frame_player2.pack(side="right")
-        self.canvas_player2 = tk.Canvas(self.frame_player2, width=len(self.GAME_MAP_2.state[0]) * self.CELL_SIZE,
+        self.frame_AI2 = tk.Frame(self)  # Tạo main frame
+        self.frame_AI2.pack(side="right")
+        self.canvas_AI2 = tk.Canvas(self.frame_AI2, width=len(self.GAME_MAP_2.state[0]) * self.CELL_SIZE,
                                         height=len(self.GAME_MAP_2.state) * self.CELL_SIZE, background='white')
-        self.canvas_player2.pack(side="left")
+        self.canvas_AI2.pack(side="left")
 
-        # Dropdown cho Player 2
-        self.label_player2 = tk.Label(self.frame_player2, text="Player 2")
-        self.label_player2.pack(side="top")
-        self.algorithm_choice_player2 = ttk.Combobox(self.frame_player2, values=["BFS", "DFS"])
-        self.algorithm_choice_player2.pack(side="right")
-        self.algorithm_choice_player2.set("Chọn thuật toán")
+        # Dropdown cho AI 2
+        self.label_AI2 = tk.Label(self.frame_AI2, text="AI 2", font=("Times", 12, "bold"), background="white", anchor="center")
+        self.label_AI2.pack(side="top")
+        self.label_step_AI2 = tk.Label(self.frame_AI2, text="Steps: 0", font=("Times", 12, "bold"), background="white", anchor="center")
+        self.label_step_AI2.pack(side="top")
+        self.algorithm_choice_AI2 = ttk.Combobox(self.frame_AI2, values=["BFS", "DFS", "UCS", "IDS", "Greedy Search", "A Star","Hill Climbing","Beam Search"])
+        self.algorithm_choice_AI2.pack(side="right")
+        self.algorithm_choice_AI2.set("Choose algorithm AI2")
 
 
         self.images = {}
@@ -96,9 +101,6 @@ class SokobanGame(tk.Tk):
         self.choosenLevel.pack(side="top")
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
-
-
-
 
         self.draw_game_map_1()
         self.draw_game_map_2()
@@ -156,7 +158,7 @@ class SokobanGame(tk.Tk):
                 "00000000"
             ])
     def draw_game_map_1(self):
-        self.canvas_player1.delete("all")
+        self.canvas_AI1.delete("all")
         for y, row in enumerate(self.GAME_MAP_1.state):
             for x, cell in enumerate(row):
                 x1, y1 = x * self.CELL_SIZE, y * self.CELL_SIZE
@@ -191,17 +193,13 @@ class SokobanGame(tk.Tk):
                     image = self.images[Image.player_on_target]
 
                 if image:
-                    self.canvas_player1.create_image(x1, y1, anchor="nw", image=image)
-                    self.canvas_player1.image = image
-
-
-
-        if self.GAME_MAP_1.is_complete():
-            messagebox.showinfo("Congratulations", "Player 1 win !!")
+                    self.canvas_AI1.create_image(x1, y1, anchor="nw", image=image)
+                    self.canvas_AI1.image = image
+        self.update()
 
     def draw_game_map_2(self):
 
-        self.canvas_player2.delete("all")
+        self.canvas_AI2.delete("all")
         for y, row in enumerate(self.GAME_MAP_2.state):
             for x, cell in enumerate(row):
                 x1, y1 = x * self.CELL_SIZE, y * self.CELL_SIZE
@@ -236,82 +234,94 @@ class SokobanGame(tk.Tk):
                     image = self.images[Image.player_on_target]
 
                 if image:
-
-                    self.canvas_player2.create_image(x1, y1, anchor="nw", image=image)
-                    self.canvas_player2.image = image
-
-
-        if self.GAME_MAP_2.is_complete():
-            messagebox.showinfo("Congratulations", "Player 2 win !!")
+                    self.canvas_AI2.create_image(x1, y1, anchor="nw", image=image)
+                    self.canvas_AI2.image = image
+        self.update()
 
     def start_game(self):
         # Hàm xử lý khi nhấn nút Start
-        algorithm1 = self.algorithm_choice_player1.get()
-        algorithm2 = self.algorithm_choice_player2.get()
+        algorithm1 = self.algorithm_choice_AI1.get()
+        algorithm2 = self.algorithm_choice_AI2.get()
         # Thực hiện các hành động dựa trên lựa chọn thuật toán ở đây
-
+        self.solve(algorithm1, algorithm2, 0.2)
+            
+    def solve(self, AI1, AI2 ,timeDelay):
+        self.algorithm_running = True
+        self.step_counter = 0
+        if AI1 == "BFS":
+            result1, cell_count1 = bfs_search(self.GAME_MAP_1)
+        elif AI1 == "DFS":
+            result1, cell_count1 = dfs_search(self.GAME_MAP_1)
+        elif AI1 == "IDS":
+            result1, cell_count1 = ids_search(self.GAME_MAP_1, 5)
+        elif AI1 == "UCS":
+            result1, cell_count1 = ucs_search(self.GAME_MAP_1)
+        elif AI1 == "Greedy Search":
+            result1, cell_count1 = greedy_search(self.GAME_MAP_1)
+        elif AI1 == "A Star":
+            result1, cell_count1 = astar_search(self.GAME_MAP_1)
+        elif AI1 == "Hill Climbing":
+            result1, cell_count1 = hill_climbing(self.GAME_MAP_1)
+        elif AI1 == "Beam Search":
+            result1, cell_count1 = BeamSearch(self.GAME_MAP_1, 2)
+        else:
+            result1, cell_count1 = None, None 
+            
+        if AI2 == "BFS":
+            result2, cell_count2 = bfs_search(self.GAME_MAP_2)
+        elif AI2 == "DFS":
+            result2, cell_count2 = dfs_search(self.GAME_MAP_2)
+        elif AI2 == "IDS":
+            result2, cell_count2 = ids_search(self.GAME_MAP_2, 5)
+        elif AI2 == "UCS":
+            result2, cell_count2 = ucs_search(self.GAME_MAP_2)
+        elif AI2 == "Greedy Search":
+            result2, cell_count2 = greedy_search(self.GAME_MAP_2)
+        elif AI2 == "A Star":
+            result2, cell_count2 = astar_search(self.GAME_MAP_2)
+        elif AI2 == "Hill Climbing":
+            result2, cell_count2 = hill_climbing(self.GAME_MAP_2)
+        elif AI2 == "Beam Search":
+            result2, cell_count2 = BeamSearch(self.GAME_MAP_2, 2)
+        else:
+            result2, cell_count2 = None, None 
+            
+        if result1 == None or result2 == None:
+            messagebox.showinfo("Problem", "No path found for either or both AI !")
+            return
+        step1 = len(result1.path)
+        step2 = len(result2.path)
+        result1.path = self.copy_until_size_match(result1.path,result2.path)
+        result2.path = self.copy_until_size_match(result2.path,result1.path)
+        for sokoban1, sokoban2 in zip(result1.path, result2.path):
+            if not self.algorithm_running:
+                break
+            self.GAME_MAP_1= sokoban1
+            self.GAME_MAP_2= sokoban2
+            self.draw_game_map_1()
+            self.draw_game_map_2()
+            time.sleep(timeDelay)
+        self.label_step_AI1.config(text=f"Steps: {step1}")
+        self.label_step_AI2.config(text=f"Steps: {step2}")
+        if step1 > step2:
+            messagebox.showinfo("Congratulations", "AI 2 win !!")
+        elif step1 < step2:
+            messagebox.showinfo("Congratulations", "AI 1 win !!")
+        else:
+            messagebox.showinfo("Congratulations", "AI 1 and AI 2 draw !!")
+        
+    def copy_until_size_match(self, A, B):
+        while len(A) < len(B):
+            A.append(A[-1])
+        return A
 
 
 
 def main():
-    # a = "map/level11.txt"
-    # FILE_MAP = map_link(a)
-
     game = SokobanGame()
 
-    # def on_key(event):
-    #     if event.keysym == "Up":
-    #         game.GAME_MAP_1.move_player(0, -1, game)
-    #     elif event.keysym == "Down":
-    #         game.GAME_MAP_1.move_player(0, 1, game)
-    #     elif event.keysym == "Left":
-    #         game.GAME_MAP_1.move_player(-1, 0, game)
-    #     elif event.keysym == "Right":
-    #         game.GAME_MAP_1.move_player(1, 0, game)
-    # def on_key(event):
-    #     # Xử lý đầu vào cho cả hai người chơi
-    #     if event.keysym in ["Up", "Down", "Left", "Right"]:
-    #         if event.keysym == "Up":
-    #             game.GAME_MAP_1.move_player_1(0, -1, game)
-    #         elif event.keysym == "Down":
-    #             game.GAME_MAP_1.move_player_1(0, 1, game)
-    #         elif event.keysym == "Left":
-    #             game.GAME_MAP_1.move_player_1(-1, 0, game)
-    #         elif event.keysym == "Right":
-    #             game.GAME_MAP_1.move_player_1(1, 0, game)
-    #     elif event.keysym in ["w", "s", "a", "d"]:
-    #         if event.keysym == "w":
-    #             game.GAME_MAP_2.move_player_2(0, -1, game)
-    #         elif event.keysym == "s":
-    #             game.GAME_MAP_2.move_player_2(0, 1, game)
-    #         elif event.keysym == "a":
-    #             game.GAME_MAP_2.move_player_2(-1, 0, game)
-    #         elif event.keysym == "d":
-    #             game.GAME_MAP_2.move_player_2(1, 0, game)
-
-
-    def on_key(event):
-        # Xử lý đầu vào cho cả hai người chơi
-        if event.keysym in ["w", "s", "a", "d"]:
-            if event.keysym == "w":
-                game.GAME_MAP_1.move_player_1(0, -1, game)
-            elif event.keysym == "s":
-                game.GAME_MAP_1.move_player_1(0, 1, game)
-            elif event.keysym == "a":
-                game.GAME_MAP_1.move_player_1(-1, 0, game)
-            elif event.keysym == "d":
-                game.GAME_MAP_1.move_player_1(1, 0, game)
-        elif event.keysym in ["Up", "Down", "Left", "Right"]:
-            if event.keysym == "Up":
-                game.GAME_MAP_2.move_player_2(0, -1, game)
-            elif event.keysym == "Down":
-                game.GAME_MAP_2.move_player_2(0, 1, game)
-            elif event.keysym == "Left":
-                game.GAME_MAP_2.move_player_2(-1, 0, game)
-            elif event.keysym == "Right":
-                game.GAME_MAP_2.move_player_2(1, 0, game)
-    game.bind("<Key>", on_key)
     game.mainloop()
+    pygame.mixer.music.stop()
 
 
 if __name__ == "__main__":
