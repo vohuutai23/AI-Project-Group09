@@ -6,8 +6,6 @@ import os
 from tkinter import ttk
 from PIL import Image, ImageTk
 import time
-
-from GUI_Start import start_GUI_Start
 from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
@@ -85,8 +83,6 @@ class SokobanGame(tk.Tk):
 
         self.control_frame = tk.Frame(self)
         self.control_frame.pack(side="top", fill="x")
-        label_select_level = tk.Label(self.control_frame, text="Select level")
-        label_select_level.pack(side="top", pady=10)
 
         n = tk.StringVar()
         self.choosenLevel = ttk.Combobox(self.control_frame, width=20, textvariable=n, state="readonly")
@@ -96,20 +92,14 @@ class SokobanGame(tk.Tk):
         self.choosenLevel['values'] = tuple(levels)
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
-        self.choosenLevel.pack(side="top", pady=5)
+        self.choosenLevel.pack(side="bottom", pady=5)
 
-
-        tk.Frame(self.control_frame, height=10).pack()
-        # Nút Start
-        self.backtohome_button = tk.Button(self.control_frame, text="Back Home", borderwidth=3, width=10, height=2,
-                                      background="red", fg="white", command=self.back_to_home)
-        self.backtohome_button.pack(side="bottom", pady=5)
+        label_select_level = tk.Label(self.control_frame, text="Select level")
+        label_select_level.pack(side="top",pady=5)
 
         self.draw_game_map_1()
         self.draw_game_map_2()
-    def back_to_home(self):
-        self.destroy()  # Đóng cửa sổ SokobanGame
-        start_GUI_Start()  # Mở cửa sổ GUI_Start
+
     def on_level_select(self, event):
         global FILE_MAP
         FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())

@@ -3,9 +3,6 @@ from tkinter import *
 from PIL import Image, ImageTk
 #from GUI_Sokoban import FILE_MAP
 import os
-
-from GUI_Start import start_GUI_Start
-
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 global FILE_MAP_level
@@ -99,13 +96,12 @@ class level_selection(tk.Tk):
         
         #back_img = PhotoImage(file=f"assets/back.png")
         self.back_img = tk.PhotoImage(file=os.path.join(_ROOT,f"images/back.png"))
-        self.back = tk.Button(image=self.back_img, borderwidth=0, highlightthickness=0, relief="flat",command=self.back_to_home)
+        self.back = tk.Button(image=self.back_img, borderwidth=0, highlightthickness=0, relief="flat",command=self.back_to_start)
         self.back.place(x=350, y=450, width=100, height=40)
          # Import GUI_start để chuyển về GUI_start
-
-    def back_to_home(self):
-        self.destroy()  # Đóng cửa sổ SokobanGame
-        start_GUI_Start()  # Mở cửa sổ GUI_Start
+    def back_to_start(self):
+        self.destroy()
+        import GUI_Start  # Import GUI_start để chuyển về GUI_start
     def open_level1(self):
         new_file_map = "map/level1.txt"  # Đường dẫn map cho level 1
         self.destroy()
@@ -117,341 +113,107 @@ class level_selection(tk.Tk):
         elif modePlay == "2 Player":
             from GUI_TwoPlayerSokoban import update_file_map
             update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
+            from  GUI_TwoPlayerSokoban import main
             main()
     
     def open_level2(self):
         new_file_map = "map/level2.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level3(self):
         new_file_map = "map/level3.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level4(self):
         new_file_map = "map/level4.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level5(self):
         new_file_map = "map/level5.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level6(self):
         new_file_map = "map/level6.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level7(self):
         new_file_map = "map/level7.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level8(self):
         new_file_map = "map/level8.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level9(self):
         new_file_map = "map/level9.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level10(self):
         new_file_map = "map/level10.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level11(self):
         new_file_map = "map/level11.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level12(self):
         new_file_map = "map/level12.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level13(self):
         new_file_map = "map/level13.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level14(self):
         new_file_map = "map/level14.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
     def open_level15(self):
         new_file_map = "map/level15.txt"  # Đường dẫn map cho level 2
         self.destroy()
-        if modePlay == "1 Player":
-            from GUI_Sokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_Sokoban import main
-            main()
-        elif modePlay == "2 Player":
-            from GUI_TwoPlayerSokoban import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoPlayerSokoban import main
-            main()
-        elif modePlay == "AI VS AI":
-            from GUI_TwoAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_TwoAI import main
-            main()
-        elif modePlay == "Player VS AI":
-            from GUI_PlayerVSAI import update_file_map
-            update_file_map(new_file_map)
-            from GUI_PlayerVSAI import main
-            main()
+        from GUI_Sokoban import update_file_map
+        update_file_map(new_file_map)
+        from GUI_Sokoban import main
+        main()
 def main():
     level = level_selection()
     level.mainloop()
