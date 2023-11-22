@@ -319,6 +319,7 @@ class SokobanGame(tk.Tk):
 
 def main():
     game = SokobanGame()
+
     game.mainloop()
     pygame.mixer.music.stop()
 
