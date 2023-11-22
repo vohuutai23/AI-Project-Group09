@@ -507,17 +507,17 @@ class SokobanGame(tk.Tk):
             elif algorithm_type == "DFS":
                 self.solve_with_dfs(0.1)
             elif algorithm_type == "IDS":
-                self.solve_with_dfs(0.1)
+                self.solve_with_ids(0.1)
             elif algorithm_type == "UCS":
-                self.solve_with_dfs(0.1)
+                self.solve_with_ucs(0.1)
             elif algorithm_type == "Greedy":
-                self.solve_with_dfs(0.1)
+                self.solve_with_greedy(0.1)
             elif algorithm_type == "A Star":
-                self.solve_with_dfs(0.1)
+                self.solve_with_a_star(0.1)
             elif algorithm_type == "Hill Climbing":
-                self.solve_with_dfs(0.1)
+                self.solve_with_hill_climbing(0.1)
             elif algorithm_type == "Beam Search":
-                self.solve_with_dfs(0.1)
+                self.solve_with_beam_search(0.1)
         else:
             time_delay_int = float(time_delay)
             if algorithm_type == "BFS":
@@ -525,17 +525,17 @@ class SokobanGame(tk.Tk):
             elif algorithm_type == "DFS":
                 self.solve_with_dfs(time_delay_int)
             elif algorithm_type == "IDS":
-                self.solve_with_dfs(time_delay_int)
+                self.solve_with_ids(time_delay_int)
             elif algorithm_type == "UCS":
-                self.solve_with_dfs(time_delay_int)
+                self.solve_with_ucs(time_delay_int)
             elif algorithm_type == "Greedy":
-                self.solve_with_dfs(time_delay_int)
+                self.solve_with_greedy(time_delay_int)
             elif algorithm_type == "A Star":
-                self.solve_with_dfs(time_delay_int)
+                self.solve_with_a_star(time_delay_int)
             elif algorithm_type == "Hill Climbing":
-                self.solve_with_dfs(time_delay_int)
+                self.solve_with_hill_climbing(time_delay_int)
             elif algorithm_type == "Beam Search":
-                self.solve_with_dfs(time_delay_int)
+                self.solve_with_beam_search(time_delay_int)
         # Thực hiện các hành động dựa trên lựa chọn thuật toán ở đây
 
     def after_algorithm(self):
@@ -552,7 +552,7 @@ class SokobanGame(tk.Tk):
             if self.AI_steps < self.player_steps:
                 messagebox.showinfo("Result", "AI Win")
             elif self.AI_steps == self.player_steps:
-                messagebox.showinfo("Result", "Hòa")
+                messagebox.showinfo("Result", "Draw")
             else:
                 messagebox.showinfo("Result", "Player Win")
         elif self.AI_completed == False and self.Player_completed:
