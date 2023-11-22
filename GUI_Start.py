@@ -20,9 +20,12 @@ background = canvas.create_image(400.0, 200.0, image=background_img)
 
 
 def start_game():
+    mode_selected = selected_mode.get()
     root.destroy()
     # Thực hiện các hành động cần thiết để bắt đầu trò chơi
     print("Game started!")
+    from GUI_level_selection import select_modePlay
+    select_modePlay(mode_selected)
     import GUI_level_selection
     GUI_level_selection.main()
 

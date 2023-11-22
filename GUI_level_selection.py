@@ -7,6 +7,12 @@ _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 global FILE_MAP_level
 
+
+
+modePlay = ""
+def select_modePlay(mode):
+    global modePlay
+    modePlay = mode
 class level_selection(tk.Tk):
     
     def __init__(self):
@@ -99,10 +105,16 @@ class level_selection(tk.Tk):
     def open_level1(self):
         new_file_map = "map/level1.txt"  # Đường dẫn map cho level 1
         self.destroy()
-        from GUI_Sokoban import update_file_map
-        update_file_map(new_file_map)
-        from GUI_Sokoban import main
-        main()
+        if modePlay == "1 Player":
+            from GUI_Sokoban import update_file_map
+            update_file_map(new_file_map)
+            from GUI_Sokoban import main
+            main()
+        elif modePlay == "2 Player":
+            from GUI_TwoPlayerSokoban import update_file_map
+            update_file_map(new_file_map)
+            from  GUI_TwoPlayerSokoban import main
+            main()
     
     def open_level2(self):
         new_file_map = "map/level2.txt"  # Đường dẫn map cho level 2

@@ -92,8 +92,114 @@ class Sokoban:
 
         if SokobanGame is not None:
             SokobanGame.draw_game_map()
-                
-        
+
+    def move_player_1(self, dx, dy, SokobanGame=None):
+        x, y = self.player_pos
+        new_map = [list(row) for row in self.state]
+        # for row in self.state:
+        #     print(row)
+        # print()
+        cell = new_map[y][x]
+        new_x, new_y = x + dx, y + dy
+        new_cell = new_map[new_y][new_x]
+        if new_cell == Level.wall:
+            return
+
+        elif new_cell == Level.box_target:
+            if cell == Level.player_on_target:
+                new_map[y][x] = Level.box_target
+            elif cell == Level.player:
+                new_map[y][x] = '0'
+            new_map[new_y][new_x] = Level.player_on_target
+            self.player_pos = (new_x, new_y)
+
+        elif new_cell == '0':
+            if cell == Level.player:
+                new_map[y][x] = '0'
+            else:
+                new_map[y][x] = Level.box_target
+            new_map[new_y][new_x] = Level.player
+            self.player_pos = (new_x, new_y)
+
+        elif new_cell == Level.box or new_cell == Level.box_on_target:
+            new_x2, new_y2 = new_x + dx, new_y + dy
+            new_cell_next = new_map[new_y2][new_x2]
+            if new_cell_next == Level.box_on_target or new_cell_next == Level.box or new_cell_next == Level.wall:
+                return
+            if cell == Level.player:
+                new_map[y][x] = '0'
+            else:
+                new_map[y][x] = Level.box_target
+            if new_cell == Level.box_on_target:
+                new_map[new_y][new_x] = Level.player_on_target
+                self.player_pos = (new_x, new_y)
+            else:
+                new_map[new_y][new_x] = Level.player
+                self.player_pos = (new_x, new_y)
+            if new_cell_next == '0':
+                new_map[new_y2][new_x2] = Level.box
+            elif new_cell_next == Level.box_target:
+                new_map[new_y2][new_x2] = Level.box_on_target
+
+        self.state = ["".join(r) for r in new_map]
+        self.stack.append(copy.copy(self.state))
+
+        if SokobanGame is not None:
+            SokobanGame.draw_game_map_1()
+
+    def move_player_2(self, dx, dy, SokobanGame=None):
+        x, y = self.player_pos
+        new_map = [list(row) for row in self.state]
+        # for row in self.state:
+        #     print(row)
+        # print()
+        cell = new_map[y][x]
+        new_x, new_y = x + dx, y + dy
+        new_cell = new_map[new_y][new_x]
+        if new_cell == Level.wall:
+            return
+
+        elif new_cell == Level.box_target:
+            if cell == Level.player_on_target:
+                new_map[y][x] = Level.box_target
+            elif cell == Level.player:
+                new_map[y][x] = '0'
+            new_map[new_y][new_x] = Level.player_on_target
+            self.player_pos = (new_x, new_y)
+
+        elif new_cell == '0':
+            if cell == Level.player:
+                new_map[y][x] = '0'
+            else:
+                new_map[y][x] = Level.box_target
+            new_map[new_y][new_x] = Level.player
+            self.player_pos = (new_x, new_y)
+
+        elif new_cell == Level.box or new_cell == Level.box_on_target:
+            new_x2, new_y2 = new_x + dx, new_y + dy
+            new_cell_next = new_map[new_y2][new_x2]
+            if new_cell_next == Level.box_on_target or new_cell_next == Level.box or new_cell_next == Level.wall:
+                return
+            if cell == Level.player:
+                new_map[y][x] = '0'
+            else:
+                new_map[y][x] = Level.box_target
+            if new_cell == Level.box_on_target:
+                new_map[new_y][new_x] = Level.player_on_target
+                self.player_pos = (new_x, new_y)
+            else:
+                new_map[new_y][new_x] = Level.player
+                self.player_pos = (new_x, new_y)
+            if new_cell_next == '0':
+                new_map[new_y2][new_x2] = Level.box
+            elif new_cell_next == Level.box_target:
+                new_map[new_y2][new_x2] = Level.box_on_target
+
+        self.state = ["".join(r) for r in new_map]
+        self.stack.append(copy.copy(self.state))
+
+        if SokobanGame is not None:
+            SokobanGame.draw_game_map_2()
     def is_complete(self):
         for row in self.state:
             if 'b' in row:
