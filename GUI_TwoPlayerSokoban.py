@@ -11,6 +11,8 @@ from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
 from SolveGreedy_Astar import *
+from tkinter import Label
+
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 FILE_MAP = "map/level6.txt"
@@ -19,7 +21,10 @@ FILE_MAP = "map/level6.txt"
 def update_file_map(new_file_map):
     global FILE_MAP
     FILE_MAP = new_file_map
-
+def create_instruction_label(parent_frame, text):
+    instruction_label = tk.Label(parent_frame, text=text, font=("Helvetica", 10))
+    instruction_label.pack(side="bottom")
+    return instruction_label
 
 class Image(object):
     wall = os.path.join(_ROOT, 'images/map_resize/wall.gif')
@@ -37,51 +42,65 @@ class SokobanGame(tk.Tk):
 
         self.check_use_algorithm = False
 
-        #self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.open_file_level_1(os.path.join(_ROOT, FILE_MAP))
         self.open_file_level_2(os.path.join(_ROOT, FILE_MAP))
 
-        # Kích thước ô trong trò chơi (đơn vị pixel)
         self.CELL_SIZE = 50
 
         self.title("Sokoban")
-        self.geometry(
-            f"{14 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
+        # self.geometry(
+        #     f"{14 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE + 200}")
+        window_width = 14 * self.CELL_SIZE + 300
+        window_height = 8 * self.CELL_SIZE + 200
+        self.geometry(f"{window_width}x{window_height}")
 
-        self.frame_player1 = tk.Frame(self)  # Tạo main frame
-        self.frame_player1.pack(side="left")
+        self.label_pvp = tk.Label(self, text="Player vs Player", font=("Helvetica", 16))
+        self.label_pvp.pack(side="top", pady=10)
+
+
+        # Tạo frame chứa map và hướng dẫn cho Player 1
+        self.frame_player1 = tk.Frame(self)
+        self.frame_player1.pack(side="left", pady=10)  # Thêm pady để tạo khoảng cách giữa frame và map
 
         self.canvas_player1 = tk.Canvas(self.frame_player1, width=len(self.GAME_MAP_1.state[0]) * self.CELL_SIZE,
-                                height=len(self.GAME_MAP_1.state) * self.CELL_SIZE, background='white')
-        self.canvas_player1.pack(side="left")
+                                        height=len(self.GAME_MAP_1.state) * self.CELL_SIZE, background='white')
+        self.canvas_player1.pack(side="top")
 
-        self.frame_player2 = tk.Frame(self)  # Tạo main frame
-        self.frame_player2.pack(side="right")
+        self.instruction_label_1 = create_instruction_label(self.frame_player1, "Player 1: Use W, A, S, D to move")
+
+        # Tạo frame chứa map và hướng dẫn cho Player 2
+        self.frame_player2 = tk.Frame(self)
+        self.frame_player2.pack(side="right", pady=10)  # Thêm pady để tạo khoảng cách giữa frame và map
+
         self.canvas_player2 = tk.Canvas(self.frame_player2, width=len(self.GAME_MAP_2.state[0]) * self.CELL_SIZE,
                                         height=len(self.GAME_MAP_2.state) * self.CELL_SIZE, background='white')
-        self.canvas_player2.pack(side="right")
+        self.canvas_player2.pack(side="top")
+
+        self.instruction_label_2 = create_instruction_label(self.frame_player2, "Player 2: Use Arrow keys (Right, Left, Up, Down) to move")
+
         self.images = {}
         self.step_counter = -1
 
         self.control_frame = tk.Frame(self)
         self.control_frame.pack(side="top", fill="x")
 
-
-
         n = tk.StringVar()
-        self.choosenLevel = ttk.Combobox(self.control_frame, width = 15, textvariable = n, state="readonly")
-        levels =[]
-        for i in range(1,16):
+        self.choosenLevel = ttk.Combobox(self.control_frame, width=20, textvariable=n, state="readonly")
+        levels = []
+        for i in range(1, 16):
             levels.append("level{}".format(i))
         self.choosenLevel['values'] = tuple(levels)
-        self.choosenLevel.pack(side="top")
         self.choosenLevel.current(0)
         self.choosenLevel.bind("<<ComboboxSelected>>", self.on_level_select)
+        self.choosenLevel.pack(side="bottom", pady=5)
+
+        label_select_level = tk.Label(self.control_frame, text="Select level")
+        label_select_level.pack(side="top",pady=5)
 
         self.draw_game_map_1()
         self.draw_game_map_2()
 
-    def on_level_select(self,event):
+    def on_level_select(self, event):
         global FILE_MAP
         FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())
         self.focus_set()
@@ -90,6 +109,8 @@ class SokobanGame(tk.Tk):
 
         self.draw_game_map_1()
         self.draw_game_map_2()
+
+
     def open_file_level_1(self, filepath):
         if os.path.exists(filepath):
             with open(filepath, "r") as file:
@@ -217,7 +238,6 @@ class SokobanGame(tk.Tk):
 
                     self.canvas_player2.create_image(x1, y1, anchor="nw", image=image)
                     self.canvas_player2.image = image
-
 
         if self.GAME_MAP_2.is_complete():
             messagebox.showinfo("Congratulations", "Player 2 win !!")
