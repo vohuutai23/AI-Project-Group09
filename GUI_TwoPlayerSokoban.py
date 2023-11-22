@@ -315,6 +315,7 @@ def main():
                 game.GAME_MAP_2.move_player_2(1, 0, game)
     game.bind("<Key>", on_key)
     game.mainloop()
+    pygame.mixer.music.stop()
 
 
 if __name__ == "__main__":

@@ -649,6 +649,7 @@ def main():
 
     game.bind("<Key>", game.on_key)
     game.mainloop()
+    pygame.mixer.music.stop()
 
 
 if __name__ == "__main__":

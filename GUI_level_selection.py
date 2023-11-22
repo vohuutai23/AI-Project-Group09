@@ -3,6 +3,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 #from GUI_Sokoban import FILE_MAP
 import os
+import pygame
 
 from GUI_Start import start_GUI_Start
 
@@ -455,6 +456,7 @@ class level_selection(tk.Tk):
 def main():
     level = level_selection()
     level.mainloop()
+    pygame.mixer.music.stop()
 
 
 if __name__ == "__main__":

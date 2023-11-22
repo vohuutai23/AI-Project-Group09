@@ -67,6 +67,7 @@ def start_GUI_Start():
 
 
     root.mainloop()
+    pygame.mixer.music.stop()
 
 if __name__ == "__main__":
     start_GUI_Start()

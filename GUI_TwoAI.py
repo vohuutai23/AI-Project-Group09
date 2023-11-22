@@ -48,6 +48,9 @@ class SokobanGame(tk.Tk):
         self.title("Sokoban")
         self.geometry(
             f"{19 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
+        
+        self.label_pvp = tk.Label(self, text="AI vs AI", font=("Helvetica", 16))
+        self.label_pvp.pack(side="top", pady=10)
 
         self.frame_AI1 = tk.Frame(self)  # Tạo main frame
         self.frame_AI1.pack(side="left")
@@ -87,10 +90,23 @@ class SokobanGame(tk.Tk):
 
         self.control_frame = tk.Frame(self)
         self.control_frame.pack(side="top", fill="x")
+        
+        
+        # Nút Back
+        self.back_button = tk.Button(self.control_frame, text="Back Home", borderwidth=3, width=10, height=2,
+                                      background="red", fg="white", command=self.back_to_home)
+        self.back_button.pack(side="bottom")
 
+        # Nút Restart
+        self.restart_button = tk.Button(self.control_frame, text="Restart", borderwidth=3, width=10, height=2,
+                                        background="green", fg="white", command=self.restart_game)
+        self.restart_button.pack(side="bottom")
         # Nút Start
-        self.start_button = tk.Button(self.control_frame, text="Start", command=self.start_game)
+        self.start_button = tk.Button(self.control_frame, text="Start", borderwidth=3, width=10, height=2,
+                                      background="orange", fg="white", command=self.start_game)
         self.start_button.pack(side="bottom")
+        tk.Label(self.control_frame, text="  ").pack(side="bottom")
+
 
         n = tk.StringVar()
         self.choosenLevel = ttk.Combobox(self.control_frame, width = 15, textvariable = n, state="readonly")
@@ -104,6 +120,27 @@ class SokobanGame(tk.Tk):
 
         self.draw_game_map_1()
         self.draw_game_map_2()
+        
+    def restart_game(self):
+
+        # Hiển thị hộp thoại xác nhận
+        response = messagebox.askyesno("Xác nhận", "Bạn có muốn restart lại trò chơi không?")
+        if response:  # Nếu người dùng chọn "Có"
+            # Đặt lại trạng thái trò chơi
+            global FILE_MAP
+            self.algorithm_running = False
+            self.game_started = False
+            # Đặt lại bản đồ trò chơi và cập nhật canvas
+            self.open_file_level_1(os.path.join(_ROOT, FILE_MAP))
+            self.open_file_level_2(os.path.join(_ROOT, FILE_MAP))
+            self.draw_game_map_1()
+            self.draw_game_map_2()
+            self.label_step_AI1.config(text=f"Steps: 0")
+            self.label_step_AI2.config(text=f"Steps: 0")
+        
+    def back_to_home(self):
+        self.destroy()  # Đóng cửa sổ SokobanGame
+        start_GUI_Start()  # Mở cửa sổ GUI_Start
 
     def on_level_select(self,event):
         global FILE_MAP
