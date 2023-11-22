@@ -47,7 +47,7 @@ class SokobanGame(tk.Tk):
 
         self.title("Sokoban")
         self.geometry(
-            f"{19 * self.CELL_SIZE + 300}x{8 * self.CELL_SIZE}")
+            f"{19 * self.CELL_SIZE + 300}x{11 * self.CELL_SIZE}")
         
         self.label_pvp = tk.Label(self, text="AI vs AI", font=("Helvetica", 16))
         self.label_pvp.pack(side="top", pady=10)
