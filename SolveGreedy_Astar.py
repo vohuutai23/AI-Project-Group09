@@ -9,6 +9,8 @@ def greedy_search(initial_state):
     cell_counter = 0
     while state_list:
         state_list.sort(key=lambda x: x[0])
+        # for st in state_list:
+        #     print(st[0])
         _, current_state = state_list.pop(0)
 
         if current_state.is_complete():

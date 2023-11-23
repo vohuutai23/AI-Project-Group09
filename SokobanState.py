@@ -218,6 +218,7 @@ class Sokoban:
                 new_sokoban = copy.copy(self)
                 new_sokoban.move_player(direction[0], direction[1])
                 new_sokoban.depth = self.depth + 1
+                new_sokoban.heuristic_value = new_sokoban.heuristic_calculate()
                 moves.append(new_sokoban)
 
         return moves
