@@ -108,8 +108,10 @@ class SokobanGame(tk.Tk):
         self.draw_game_map_1()
         self.draw_game_map_2()
     def back_to_home(self):
-        self.destroy()  # Đóng cửa sổ SokobanGame
-        start_GUI_Start()  # Mở cửa sổ GUI_Start
+        response = messagebox.askyesno("Xác nhận", "Bạn có muốn thoát chế độ chơi này không?")
+        if response:
+            self.destroy()  # Đóng cửa sổ SokobanGame
+            start_GUI_Start()  # Mở cửa sổ GUI_Start
     def on_level_select(self, event):
         global FILE_MAP
         FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())
