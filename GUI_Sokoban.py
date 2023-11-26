@@ -34,6 +34,7 @@ class Image(object):
 
 class SokobanGame(tk.Tk):
     def __init__(self):
+        self.step_counter = 0
         
         super().__init__()
 
