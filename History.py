@@ -6,8 +6,10 @@ Created on Sat Nov 18 20:11:07 2023
 """
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class TableApp(tk.Tk):
     def __init__(self, data):
@@ -34,6 +36,8 @@ class TableApp(tk.Tk):
         self.table.configure(xscrollcommand=xscrollbar.set)
         
         self.draw_table()
+        btnOutputexcel = tk.Button(self, text = "Output Excel",  font = ("Times", 12, "bold"), borderwidth = 3, background = "floralwhite", fg = "black", command=self.output_excel)
+        btnOutputexcel.pack()
         ttk.Label(self, text = "Choose level :",
                   font = ("Times New Roman", 10)).pack()
               
@@ -104,7 +108,32 @@ class TableApp(tk.Tk):
         self.canvas.get_tk_widget().pack()
 
         plt.show()
+        
+    def output_excel(self):
+        # Tạo DataFrame từ dữ liệu
+        df = pd.DataFrame(self.data, columns=["Level", "Algorithm", "Elapsed Time", "Cell Count", "Step Counter"])
+        
+        # Chọn đường dẫn và tên tệp Excel để xuất
+        excel_file_path = "history_data.xlsx"
+        
+        # Xuất DataFrame vào tệp Excel
+        df.to_excel(excel_file_path, index=False)
+    
+        messagebox.showinfo("Notification",f"The data has been exported successfull {excel_file_path}")
 
 def History(data):
     app = TableApp(data)
     app.mainloop()
+    
+# data = [
+#     (1, "Algorithm A", 10.5, 100, 50),
+#     (1, "Algorithm B", 12.3, 120, 60),
+#     (2, "Algorithm A", 8.2, 80, 40),
+#     (2, "Algorithm B", 9.5, 95, 45),
+#     (3, "Algorithm A", 11.0, 110, 55),
+#     (3, "Algorithm B", 13.1, 130, 65),
+#     # Add more data as needed
+# ]
+
+# History(data)
+#output_excel(data)
