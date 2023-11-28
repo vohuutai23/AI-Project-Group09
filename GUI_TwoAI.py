@@ -12,7 +12,7 @@ from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
-from SolveGreedy_Astar import *
+from SolveGreedy_Astar_Local import *
 import pygame
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))

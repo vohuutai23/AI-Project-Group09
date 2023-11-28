@@ -12,7 +12,7 @@ from SokobanState import *
 from SolveDFS_IDS import *
 from SolveBFS_UCS import *
 import time
-from SolveGreedy_Astar import *
+from SolveGreedy_Astar_Local import *
 from tkinter import Label
 
 
@@ -254,46 +254,8 @@ class SokobanGame(tk.Tk):
         if self.GAME_MAP_2.is_complete():
             messagebox.showinfo("Congratulations", "Player 2 win !!")
 
-
-
-
-
 def main():
-    # a = "map/level11.txt"
-    # FILE_MAP = map_link(a)
-
     game = SokobanGame()
-
-    # def on_key(event):
-    #     if event.keysym == "Up":
-    #         game.GAME_MAP_1.move_player(0, -1, game)
-    #     elif event.keysym == "Down":
-    #         game.GAME_MAP_1.move_player(0, 1, game)
-    #     elif event.keysym == "Left":
-    #         game.GAME_MAP_1.move_player(-1, 0, game)
-    #     elif event.keysym == "Right":
-    #         game.GAME_MAP_1.move_player(1, 0, game)
-    # def on_key(event):
-    #     # Xử lý đầu vào cho cả hai người chơi
-    #     if event.keysym in ["Up", "Down", "Left", "Right"]:
-    #         if event.keysym == "Up":
-    #             game.GAME_MAP_1.move_player_1(0, -1, game)
-    #         elif event.keysym == "Down":
-    #             game.GAME_MAP_1.move_player_1(0, 1, game)
-    #         elif event.keysym == "Left":
-    #             game.GAME_MAP_1.move_player_1(-1, 0, game)
-    #         elif event.keysym == "Right":
-    #             game.GAME_MAP_1.move_player_1(1, 0, game)
-    #     elif event.keysym in ["w", "s", "a", "d"]:
-    #         if event.keysym == "w":
-    #             game.GAME_MAP_2.move_player_2(0, -1, game)
-    #         elif event.keysym == "s":
-    #             game.GAME_MAP_2.move_player_2(0, 1, game)
-    #         elif event.keysym == "a":
-    #             game.GAME_MAP_2.move_player_2(-1, 0, game)
-    #         elif event.keysym == "d":
-    #             game.GAME_MAP_2.move_player_2(1, 0, game)
-
 
     def on_key(event):
         # Xử lý đầu vào cho cả hai người chơi

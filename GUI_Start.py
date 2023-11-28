@@ -16,7 +16,6 @@ def start_GUI_Start():
     canvas.place(x=0, y=0)
     background_img = PhotoImage(file=os.path.join(_ROOT,f"images/background4_1.png"))
     background = canvas.create_image(400.0, 200.0, image=background_img)
-    #info = canvas.create_text(400.0, 100, text="SOKOBAN", fill="red", font=("Rockwell Extra Bold", int(80.0)))
 
 
     def start_game():
@@ -32,10 +31,6 @@ def start_GUI_Start():
     start_img = PhotoImage(file=os.path.join(_ROOT,f"images/start_game.png"))
     start = Button(image=start_img, borderwidth=0, highlightthickness=0, relief="flat", command = start_game)
     start.place(x=330, y=300, width=150, height=70)
-
-
-    #info_img = PhotoImage(file=f"images/SOKOBAN.png")
-    #info = canvas.create_image(400.0, 100.0, image=info_img)
 
     # Danh sách chọn chế độ chơi
     game_modes = ["1 Player", "2 Player", "AI VS AI", "Player VS AI"]
