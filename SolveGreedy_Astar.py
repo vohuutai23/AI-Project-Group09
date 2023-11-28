@@ -5,13 +5,13 @@ from collections import deque
 
 def greedy_search(initial_state):
     visited = set()
-    state_list = [(0, initial_state)]
+    stack = [(0, initial_state)]
     cell_counter = 0
-    while state_list:
-        state_list.sort(key=lambda x: x[0])
+    while stack:
+        stack.sort(key=lambda x: x[0])
         # for st in state_list:
         #     print(st[0])
-        _, current_state = state_list.pop(0)
+        _, current_state = stack.pop(0)
 
         if current_state.is_complete():
             return current_state, cell_counter
@@ -21,7 +21,7 @@ def greedy_search(initial_state):
                 cell_counter += 1
                 visited.add(tuple(map(tuple, move.state)))
                 heuristic_val = move.heuristic_value
-                state_list.append((heuristic_val, move))
+                stack.append((heuristic_val, move))
                 move.path = current_state.path + [move]
 
     return None, cell_counter
