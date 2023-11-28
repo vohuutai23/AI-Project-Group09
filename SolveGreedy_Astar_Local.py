@@ -29,11 +29,11 @@ def greedy_search(initial_state):
 
 def astar_search(initial_state):
     visited = set()
-    state_list = [(0,0, initial_state)]
+    stack = [(0,0, initial_state)]
     cell_counter = 0
-    while state_list:
-        state_list.sort(key=lambda x: x[0])
-        f_star, cost, current_state = state_list.pop(0)
+    while stack:
+        stack.sort(key=lambda x: x[0])
+        f_star, cost, current_state = stack.pop(0)
 
         if current_state.is_complete():
             return current_state, cell_counter
@@ -45,7 +45,7 @@ def astar_search(initial_state):
                 g_cost = cost + calculate_move_cost(move, current_state)
                 h_heuris = move.heuristic_value
                 f_count = g_cost + h_heuris
-                state_list.append((f_count,g_cost, move))
+                stack.append((f_count,g_cost, move))
                 move.path = current_state.path + [move]
 
     return None, cell_counter
@@ -71,55 +71,6 @@ def hill_climbing(initial_state):
                 cell_counter += 1
     return None, cell_counter
 
-# def hill_climbing(initial_state):
-#     visited = set()
-#     state_initial = [(initial_state)]
-#     cell_counter = 0
-#     while state_initial:
-#         stack = [state_initial.pop()]
-#         while stack:
-#             current_state = stack.pop()
-#             if current_state.is_complete():
-#                 return current_state, cell_counter
-#             for move in current_state.generate_moves():
-#                 if tuple(map(tuple, move.state)) not in visited:
-#                     cell_counter += 1
-#                     visited.add(tuple(map(tuple, move.state)))
-#                     move.path = current_state.path + [move]
-#                     if move.heuristic_value <= current_state.heuristic_value:
-#                         stack.append(move)
-#                     else:
-#                         state_initial.append(move)
-#
-#     return None, cell_counter
-# def hill_climbing(initial_state):
-#     current_state = initial_state
-#     visited = set()
-#     cell_counter = 0
-#
-#     while True:
-#         moves = current_state.generate_moves()
-#         visited.add(tuple(map(tuple, current_state.state)))
-#
-#         next_state = None
-#         best_heuristic = current_state.heuristic_value
-#
-#         for move in moves:
-#             if tuple(map(tuple, move.state)) not in visited:
-#                 if move.heuristic_value < best_heuristic:
-#                     best_heuristic = move.heuristic_value
-#                     next_state = move
-#
-#         if next_state is None or current_state.is_complete():
-#             # Không có trạng thái nào tốt hơn hoặc đã đạt trạng thái hoàn thành
-#             return current_state, cell_counter
-#
-#         current_state = next_state
-#         cell_counter += 1
-#         current_state.path.append(next_state)  # Lưu trữ bước di chuyển
-#
-#     # Nếu quá trình lặp không tìm thấy trạng thái hoàn thành, trả về trạng thái hiện tại và số ô đã thăm
-#     return current_state, cell_counter
 
 def BeamSearch(initial_state, k):
     queue = deque([initial_state])  
