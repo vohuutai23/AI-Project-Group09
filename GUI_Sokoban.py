@@ -55,7 +55,7 @@ class SokobanGame(tk.Tk):
         self.canvas.pack(side="left")
 
         self.images = {}
-        self.step_counter = -1
+        self.step_counter = 0
 
         tk.Label(self.main_frame,text="SUPPORT", fg = "black" , relief = tk.SUNKEN, font = ("Times", 14, "bold"), background= "white", borderwidth = 1).pack(side="top")
         tk.Label(self.main_frame,text="---------").pack(side="top")
@@ -496,6 +496,7 @@ class SokobanGame(tk.Tk):
         result, cell_count = BeamSearch(self.GAME_MAP, 2)
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
+            self.update_gui_info2(cell_count)
         end_time = time.time()
         elapsed_time = end_time - self.start_time
         for sokoban in result.path:
