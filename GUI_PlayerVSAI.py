@@ -369,7 +369,12 @@ class SokobanGame(tk.Tk):
     #     self.step_counter = 0
     #     self.update_gui_info(self.step_counter,0)
     #     self.update_gui_info2(0)
-
+    def update_ai_map(self):
+        if not self.algorithm_running:
+            return  # Dừng cập nhật nếu thuật toán đã kết thúc
+        # Logic cập nhật bản đồ AI ở đây
+        self.draw_game_map_2()
+        self.after(100, self.update_ai_map)
     def solve_with_bfs(self, timeDelay):
         self.algorithm_running = True
         self.step_counter = 0
@@ -520,22 +525,61 @@ class SokobanGame(tk.Tk):
         self.after_algorithm()
 
     def run_algorithm(self):
-        if self.algorithm_selected == "BFS":
-            self.solve_with_bfs(self.time_delay_step)
-        elif self.algorithm_selected == "DFS":
-            self.solve_with_dfs(self.time_delay_step)
-        elif self.algorithm_selected == "IDS":
-            self.solve_with_ids(self.time_delay_step)
-        elif self.algorithm_selected == "UCS":
-            self.solve_with_ucs(self.time_delay_step)
-        elif self.algorithm_selected == "Greedy":
-            self.solve_with_greedy(self.time_delay_step)
-        elif self.algorithm_selected == "A Star":
-            self.solve_with_a_star(self.time_delay_step)
-        elif self.algorithm_selected == "Hill Climbing":
-            self.solve_with_hill_climbing(self.time_delay_step)
-        elif self.algorithm_selected == "Beam Search":
-            self.solve_with_beam_search(self.time_delay_step)
+        self.algorithm_running = True
+
+        # Chọn thuật toán dựa trên lựa chọn của người dùng
+        algorithm_type = self.algorithm_selected
+        if algorithm_type == "BFS":
+            result, cell_count = bfs_search(self.GAME_MAP_2)
+        elif algorithm_type == "DFS":
+            result, cell_count = dfs_search(self.GAME_MAP_2)
+        elif algorithm_type == "IDS":
+            result, cell_count = astar_search(self.GAME_MAP_2)
+        elif algorithm_type == "UCS":
+            result, cell_count = ucs_search(self.GAME_MAP_2)
+        elif algorithm_type == "Greedy":
+            result, cell_count = greedy_search(self.GAME_MAP_2)
+        elif algorithm_type == "A Star":
+            result, cell_count = dfs_search(self.GAME_MAP_2)
+        elif algorithm_type == "Hill Climbing":
+            result, cell_count = hill_climbing(self.GAME_MAP_2)
+        elif algorithm_type == "Beam Search":
+            result, cell_count = BeamSearch(self.GAME_MAP_2)
+
+
+
+        # Kiểm tra kết quả và cập nhật bản đồ AI
+        if result is not None:
+            for sokoban in result.path:
+                if not self.algorithm_running:
+                    break
+                self.GAME_MAP_2 = sokoban
+                self.AI_steps += 1
+                time.sleep(self.time_delay_step)  # Đợi giữa các bước di chuyển
+                self.update_gui_info_AI(self.AI_steps)  # Cập nhật giao diện với số bước AI
+        else:
+            messagebox.showinfo("Problem", "AI can't find a path!")
+
+        self.algorithm_running = False
+        self.after_algorithm()  # Xử lý sau khi thuật toán kết thúc
+
+    # def run_algorithm(self):
+    #     if self.algorithm_selected == "BFS":
+    #         self.solve_with_bfs(self.time_delay_step)
+    #     elif self.algorithm_selected == "DFS":
+    #         self.solve_with_dfs(self.time_delay_step)
+    #     elif self.algorithm_selected == "IDS":
+    #         self.solve_with_ids(self.time_delay_step)
+    #     elif self.algorithm_selected == "UCS":
+    #         self.solve_with_ucs(self.time_delay_step)
+    #     elif self.algorithm_selected == "Greedy":
+    #         self.solve_with_greedy(self.time_delay_step)
+    #     elif self.algorithm_selected == "A Star":
+    #         self.solve_with_a_star(self.time_delay_step)
+    #     elif self.algorithm_selected == "Hill Climbing":
+    #         self.solve_with_hill_climbing(self.time_delay_step)
+    #     elif self.algorithm_selected == "Beam Search":
+    #         self.solve_with_beam_search(self.time_delay_step)
 
     def start_game(self):
         self.game_started = True
@@ -578,6 +622,7 @@ class SokobanGame(tk.Tk):
                 self.solve_with_beam_search(0.1)
         else:
             self.time_delay_step = float(time_delay)
+            self.after(100, self.update_ai_map)
             algorithm_thread = threading.Thread(target=self.run_algorithm)
             algorithm_thread.start()
 
