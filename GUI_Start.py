@@ -58,9 +58,6 @@ def start_GUI_Start():
     next_button = Button(root, text=">", command=next_mode)
     next_button.place(x=500, y=200, width=25, height=50)
 
-
-
-
     root.mainloop()
     pygame.mixer.music.stop()
 

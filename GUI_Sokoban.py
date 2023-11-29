@@ -230,11 +230,6 @@ class SokobanGame(tk.Tk):
                 if image:
                     self.canvas.create_image(x1, y1, anchor="nw", image=image)
                     self.canvas.image = image
-       
-
-        #     self.step_label.config(text="Steps: {}".format(self.step_counter))
-        #
-        # self.update()
         
         if self.GAME_MAP.is_complete():
             messagebox.showinfo("Congratulations", "You win !!")
@@ -282,33 +277,6 @@ class SokobanGame(tk.Tk):
             time.sleep(0.1)
         self.check_use_algorithm = True
         self.HISTORY.append((self.LEVEL,"BFS",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
-        # self.update_gui_info(self.step_counter, elapsed_time)
-
-    # def solve_with_bfs(self):
-    #     step_counter = 0
-    #     # self.restart_game()
-    #     if self.check_use_algorithm == True:
-    #         messagebox.showwarning("Restart","You need press the RESTART button!")
-    #         return
-    #     result = bfs_search(self.GAME_MAP)
-    #     if result == None:
-    #         messagebox.showinfo("Problem","Don't find the path!")
-    #     print("PATH")
-    #     start_time = time.time()
-    #     # self.start_update_time_thread(start_time)
-    #     for sokoban in result.path:
-    #         self.GAME_MAP = sokoban
-    #         step_counter += 1
-    #         elapsed_time = time.time() - start_time
-    #         self.update_gui_info(step_counter, elapsed_time)
-    #         self.draw_game_map()
-    #         for row in sokoban.state:
-    #             print(row)
-    #         print()
-    #         time.sleep(0.1)
-    #     # self.stop_update_time_thread()
-    #     self.check_use_algorithm = True
     
     def solve_with_dfs(self):
         if self.step_counter > 0:
@@ -335,7 +303,6 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"DFS",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_ucs(self):
@@ -367,7 +334,6 @@ class SokobanGame(tk.Tk):
 
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"UCS",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
 
 
@@ -395,7 +361,6 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"IDS",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_greedy(self):
@@ -422,7 +387,6 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"GREEDY",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_a_star(self):
@@ -449,7 +413,6 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"A START",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
 
     def solve_with_hill_climbing(self):
@@ -480,8 +443,8 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"HILL CLIMBING",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
+        
     def solve_with_beam_search(self):
         if self.step_counter > 0:
             self.step_counter = 0
@@ -507,14 +470,9 @@ class SokobanGame(tk.Tk):
             self.draw_game_map()
             time.sleep(0.1)
         self.HISTORY.append((self.LEVEL,"BEAM SEARCH",elapsed_time,cell_count,self.step_counter))
-        print(self.HISTORY)
         self.check_use_algorithm = True
     
 def main():
-    
-    #a = "map/level11.txt"
-    #FILE_MAP = map_link(a)
-    
     game = SokobanGame()
 
     def on_key(event):

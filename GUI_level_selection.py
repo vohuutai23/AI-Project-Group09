@@ -109,7 +109,7 @@ class level_selection(tk.Tk):
         start_GUI_Start()  # Mở cửa sổ GUI_Start
         
     def open_level(self, level):
-        new_file_map = "map/level{}.txt".format(level)  # Đường dẫn map cho level 1
+        new_file_map = "map/level{}.txt".format(level)  # Đường dẫn map cho level 
         self.destroy()
         if modePlay == "1 Player":
             from GUI_Sokoban import update_file_map
