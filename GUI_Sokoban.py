@@ -457,11 +457,14 @@ class SokobanGame(tk.Tk):
         self.start_time = time.time()
         # self.start_update_time_thread()
         result, cell_count = BeamSearch(self.GAME_MAP, 2)
+        end_time = time.time()
+        elapsed_time = end_time - self.start_time
         if result == None:
             messagebox.showinfo("Problem","Don't find the path!")
             self.update_gui_info2(cell_count)
-        end_time = time.time()
-        elapsed_time = end_time - self.start_time
+            self.time_label.config(text=f"Time: {elapsed_time:.2f} seconds")
+            return
+
         for sokoban in result.path:
             self.GAME_MAP = sokoban
             self.step_counter += 1
