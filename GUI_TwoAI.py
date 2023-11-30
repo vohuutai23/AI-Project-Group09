@@ -39,6 +39,7 @@ class SokobanGame(tk.Tk):
         super().__init__()
 
         self.check_use_algorithm = False
+        self.is_running = True
 
         #self.open_file_level(os.path.join(_ROOT, FILE_MAP))
         self.open_file_level_1(os.path.join(_ROOT, FILE_MAP))
@@ -93,6 +94,10 @@ class SokobanGame(tk.Tk):
         self.control_frame = tk.Frame(self)
         self.control_frame.pack(side="top", fill="x")
         
+        self.stop_button = tk.Button(self.control_frame, text="Stop", borderwidth=3,
+                                     width=10, height=2, background="yellow", fg="black", command=self.stop)
+
+        self.stop_button.pack(side="bottom")
         
         # Nút Back
         self.back_button = tk.Button(self.control_frame, text="Back Home", borderwidth=3, width=10, height=2,
@@ -122,6 +127,9 @@ class SokobanGame(tk.Tk):
 
         self.draw_game_map_1()
         self.draw_game_map_2()
+        
+    def stop(self):
+        self.is_running = False
         
     def restart_game(self):
 
@@ -332,6 +340,7 @@ class SokobanGame(tk.Tk):
         step2 = len(result2.path)
         result1.path = self.copy_until_size_match(result1.path,result2.path)
         result2.path = self.copy_until_size_match(result2.path,result1.path)
+        self.is_running = True
         for sokoban1, sokoban2 in zip(result1.path, result2.path):
             if not self.algorithm_running:
                 break
@@ -340,6 +349,11 @@ class SokobanGame(tk.Tk):
             self.draw_game_map_1()
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP_1= Sokoban(self.GAME_MAP_1.state)
+                self.GAME_MAP_2= Sokoban(self.GAME_MAP_2.state)
+                break
         self.label_step_AI1.config(text=f"Steps: {step1}")
         self.label_step_AI2.config(text=f"Steps: {step2}")
         if step1 > step2:

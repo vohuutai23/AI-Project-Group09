@@ -42,6 +42,7 @@ class SokobanGame(tk.Tk):
 
         super().__init__()
 
+        self.is_running = True
         self.check_use_algorithm = False
         self.player_steps = 0
         self.AI_steps = 0
@@ -150,14 +151,22 @@ class SokobanGame(tk.Tk):
 
         self.start_button.pack()
         tk.Frame(self.control_frame, height=10).pack()
-        # Nút Start
+        # Nút Back
         self.back_button = tk.Button(self.control_frame, text="Back Home", borderwidth=3, width=10, height=2,
                                       background="red", fg="white", command=self.back_to_home)
 
         self.back_button.pack()
+        tk.Frame(self.control_frame, height=10).pack()
+        self.stop_button = tk.Button(self.control_frame, text="Stop", borderwidth=3,
+                                     width=10, height=2, background="yellow", fg="black", command=self.stop)
+
+        self.stop_button.pack()
 
         self.draw_game_map_1()
         self.draw_game_map_2()
+        
+    def stop(self):
+        self.is_running = False
 
     def back_to_home(self):
         response = messagebox.askyesno("Xác nhận", "Bạn có muốn thoát chế độ chơi này không?")
@@ -390,6 +399,10 @@ class SokobanGame(tk.Tk):
             self.update_gui_info_AI(self.step_counter)
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                break
         self.after_algorithm()
 
     def solve_with_dfs(self, timeDelay):
@@ -407,6 +420,10 @@ class SokobanGame(tk.Tk):
             self.update_gui_info_AI(self.step_counter)
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                break
 
         self.after_algorithm()
 
@@ -426,6 +443,10 @@ class SokobanGame(tk.Tk):
             self.update_gui_info_AI(self.step_counter)
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                break
 
         self.after_algorithm()
 
@@ -446,6 +467,10 @@ class SokobanGame(tk.Tk):
             self.update_gui_info_AI(self.step_counter)
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                break
 
         self.after_algorithm()
 
@@ -466,6 +491,10 @@ class SokobanGame(tk.Tk):
             self.update_gui_info_AI(self.step_counter)
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                break
 
         self.after_algorithm()
 
@@ -484,6 +513,10 @@ class SokobanGame(tk.Tk):
             self.update_gui_info_AI(self.step_counter)
             self.draw_game_map_2()
             time.sleep(timeDelay)
+            if self.is_running == False:
+                self.is_running = True
+                self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                break
 
         self.after_algorithm()
 
@@ -522,6 +555,7 @@ class SokobanGame(tk.Tk):
             self.draw_game_map_2()
             time.sleep(timeDelay)
 
+
         self.after_algorithm()
 
     def run_algorithm(self):
@@ -557,6 +591,10 @@ class SokobanGame(tk.Tk):
                 self.AI_steps += 1
                 time.sleep(self.time_delay_step)  # Đợi giữa các bước di chuyển
                 self.update_gui_info_AI(self.AI_steps)  # Cập nhật giao diện với số bước AI
+                if self.is_running == False:
+                    self.is_running = True
+                    self.GAME_MAP = Sokoban(self.GAME_MAP_2.state)
+                    break
         else:
             messagebox.showinfo("Problem", "AI can't find a path!")
 
