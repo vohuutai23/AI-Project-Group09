@@ -105,6 +105,11 @@ class SokobanGame(tk.Tk):
                                       background="red", fg="white", command=self.back_to_home)
         self.backtohome_button.pack(side="bottom", pady=5)
 
+        # Nút Restart
+        self.restart_button = tk.Button(self.control_frame, text="Restart", borderwidth=3, width=10, height=2,
+                                        background="green", fg="white", command=self.restart_game)
+        self.restart_button.pack(side="bottom")
+
         self.draw_game_map_1()
         self.draw_game_map_2()
     def back_to_home(self):
@@ -112,6 +117,20 @@ class SokobanGame(tk.Tk):
         if response:
             self.destroy()  # Đóng cửa sổ SokobanGame
             start_GUI_Start()  # Mở cửa sổ GUI_Start
+
+    def restart_game(self):
+
+        # Hiển thị hộp thoại xác nhận
+        response = messagebox.askyesno("Xác nhận", "Bạn có muốn restart lại trò chơi không?")
+        if response:  # Nếu người dùng chọn "Có"
+            # Đặt lại trạng thái trò chơi
+            global FILE_MAP
+
+            # Đặt lại bản đồ trò chơi và cập nhật canvas
+            self.open_file_level_1(os.path.join(_ROOT, FILE_MAP))
+            self.open_file_level_2(os.path.join(_ROOT, FILE_MAP))
+            self.draw_game_map_1()
+            self.draw_game_map_2()
     def on_level_select(self, event):
         global FILE_MAP
         FILE_MAP = "map/{}.txt".format(self.choosenLevel.get())
